@@ -13,7 +13,8 @@ class DiwaliGame{
     this.otherPlayers=new Map();this.nearby=null;this.soundOn=false;this.last=0;this.time=0;
     this.ui.refresh();this.resize();addEventListener("resize",()=>this.resize());requestAnimationFrame(t=>this.frame(t));
     setTimeout(()=>document.getElementById("loading-cover").classList.add("done"),550);
-    this.ui.toast("Welcome! Wander over to the market and say hello.");
+    this.network.connect(true);
+    this.ui.toast("Welcome to Diwali Town! The public world connects automatically.");
   }
   resize(){
     const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);
@@ -22,8 +23,6 @@ class DiwaliGame{
     this.ctx.setTransform(this.canvas.width/960,0,0,this.canvas.height/600,0,0);
   }
   save(){localStorage.setItem("diwali-name",this.player.name);localStorage.setItem("diwali-coins",String(this.coins));localStorage.setItem("diwali-inventory",JSON.stringify(this.inventory));localStorage.setItem("diwali-quest",JSON.stringify(this.quest))}
-  createRoom(){const code=Math.random().toString(36).slice(2,8).toUpperCase();if(!this.network.serverUrl){this.network.connect(code);return}this.network.connect(code);this.ui.showRoomCode(code)}
-  joinRoom(code){const clean=String(code||"").trim().toUpperCase();if(!/^[A-Z0-9]{4,8}$/.test(clean)){this.ui.toast("Enter a room code with 4–8 letters or numbers.");return}this.network.connect(clean)}
   applyNetworkState(players){
     for(const p of players){if(p.id===this.network.playerId){this.player.x=p.x;this.player.y=p.y;continue}
       let other=this.otherPlayers.get(p.id);if(!other){other=new Player({id:p.id,name:p.name,x:p.x,y:p.y,color:p.color,local:false});this.otherPlayers.set(p.id,other)}
