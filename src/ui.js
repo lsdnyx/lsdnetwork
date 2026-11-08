@@ -17,27 +17,20 @@ export class UI {
   refresh(){
     const g=this.game;
     const coins=document.getElementById("coin-count");if(coins)coins.textContent=g.coins;
-    const status=document.getElementById("connection-label");if(status)status.textContent=g.network.connected?"ROOM "+g.network.roomCode:"SOLO WORLD";
+    const status=document.getElementById("connection-label");if(status)status.textContent=g.network.connected?"PUBLIC WORLD · ONLINE":g.network.connecting?"CONNECTING TO PUBLIC WORLD": "PUBLIC WORLD · OFFLINE";
   }
   settings(){
-    const connected=this.game.network.connected;
+    const network=this.game.network;
+    const status=network.connected?"You are in the shared public world.":network.connecting?"Connecting to the shared public world…":"The public world server is not connected.";
     const html='<div class="settings-group"><label for="settings-name">PLAYER NAME</label><input id="settings-name" maxlength="16" value="'+this.game.player.name.replace(/["<>]/g,"")+'"></div>'+
-      '<div class="settings-group"><label for="settings-room">ROOM CODE</label><input id="settings-room" maxlength="8" placeholder="ENTER FRIEND ROOM CODE"></div>'+
-      '<div class="settings-status">'+(connected?'Connected to room <b>'+this.game.network.roomCode+'</b>':'You are exploring solo.')+'</div>'+
-      '<div class="settings-grid"><button class="button button-primary" id="settings-create">CREATE ROOM</button><button class="button button-outline" id="settings-join">JOIN ROOM</button></div>'+
-      (connected?'<button class="button button-danger" id="settings-leave">LEAVE ROOM</button>':'')+
+      '<div class="settings-status">'+status+'</div>'+
+      (!network.connected?'<button class="button button-primary settings-wide" id="settings-connect">'+(network.connecting?"CONNECTING…":"RECONNECT TO PUBLIC WORLD")+'</button>':'')+
       '<button class="button button-outline settings-wide" id="settings-fullscreen">⛶ '+(document.fullscreenElement?'EXIT FULLSCREEN':'FULLSCREEN')+'</button>'+
-      '<p class="settings-note">Share your room code with friends. Rooms support up to five players when the online server is deployed.</p>';
+      '<p class="settings-note">Everyone plays together on the same public map. There are no room codes or private rooms.</p>';
     this.show("Game settings",html,[{label:"DONE",primary:true,action:()=>this.close()}],"YOUR GAME");
     document.getElementById("settings-name").addEventListener("change",e=>{const n=e.target.value.trim().slice(0,16);if(n){this.game.player.name=n;this.game.save();this.refresh()}});
-    document.getElementById("settings-create").addEventListener("click",()=>this.game.createRoom());
-    document.getElementById("settings-join").addEventListener("click",()=>this.game.joinRoom(document.getElementById("settings-room").value));
-    document.getElementById("settings-leave")?.addEventListener("click",()=>{this.game.network.disconnect();this.game.otherPlayers.clear();this.refresh();this.settings();this.toast("You left the room.")});
+    document.getElementById("settings-connect")?.addEventListener("click",()=>{network.connect();this.settings()});
     document.getElementById("settings-fullscreen").addEventListener("click",async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();this.settings()}catch{this.toast("Fullscreen is not available in this browser.")}});
-  }
-  showRoomCode(code){
-    if(!this.backdrop.hidden)this.settings();
-    this.show("Your friend room is ready",'<p>Share this code with your friends:</p><div class="room-code-display">'+code+'</div><p>They can enter it in Settings → Join Room.</p>',[{label:"COPY CODE",primary:true,action:()=>{navigator.clipboard?.writeText(code).then(()=>this.toast("Room code copied.")).catch(()=>this.toast("Room code: "+code))}},{label:"DONE",action:()=>this.close()}],"INVITE FRIENDS");
   }
   openShop(kind){
     const ids=kind==="decor"?["diya","flowers","rangoli","lantern"]:kind==="tea"?["jalebi","laddu"]:["kaju","laddu","jalebi"];
