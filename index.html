@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LSD Network | Hub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a0f;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container { max-width: 700px; width: 100%; text-align: center; }
+    h1 {
+      font-size: 2.8rem;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #a855f7, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    p { color: #94a3b8; margin-bottom: 2.5rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: #13131f;
+      border: 1px solid #27273a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+    }
+    .card:hover {
+      border-color: #a855f7;
+      transform: translateY(-3px);
+    }
+    .card h3 { color: #f8fafc; margin-bottom: 0.4rem; }
+    .card span { font-size: 0.85rem; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LSD NETWORK</h1>
+    <p>System Online. Deploying apps, trackers, and interactive builds.</p>
+    <div class="grid">
+      <a href="#" class="card">
+        <h3>App Slot 01</h3>
+        <span>Pending Deployment</span>
+      </a>
+      <a href="#" class="card">
+        <h3>App Slot 02</h3>
+        <span>Pending Deployment</span>
+      </a>
+      <a href="#" class="card">
+        <h3>Game Slot 03</h3>
+        <span>Pending Deployment</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
