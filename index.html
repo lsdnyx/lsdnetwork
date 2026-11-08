@@ -21,6 +21,7 @@
                 <i class="ph ph-download-simple"></i>
                 <span>save</span>
             </button>
+            <button class="nav-item" data-target="game"><i class="ph ph-game-controller"></i><span>game</span></button>
             <button class="nav-item" data-target="remux">
                 <i class="ph ph-arrows-left-right"></i>
                 <span>remux</span>
@@ -200,6 +201,38 @@
             </div>
         </section>
         
+
+        <!-- MULTIPLAYER GAME PAGE (additive: existing pages are unchanged) -->
+        <section id="page-game" class="page game-page">
+            <div class="game-heading">
+                <div><span class="version">lsdnetwork playground</span><h2>pixel world</h2></div>
+                <span class="game-pill">up to 5 players</span>
+            </div>
+            <div class="game-layout">
+                <div class="game-main">
+                    <div class="game-canvas-wrap">
+                        <canvas id="gameCanvas" width="960" height="540" aria-label="Pixel platform game"></canvas>
+                        <div class="game-hud"><span id="game-player-count">solo preview</span><span id="game-room-label">no room</span></div>
+                    </div>
+                    <div class="game-controls-hint">MOVE <kbd>A</kbd> <kbd>D</kbd> / <kbd>←</kbd> <kbd>→</kbd> <span>JUMP</span> <kbd>SPACE</kbd> / <kbd>W</kbd> / <kbd>↑</kbd></div>
+                </div>
+                <aside class="game-panel">
+                    <div class="game-panel-title">join your friends</div>
+                    <label class="game-label" for="game-player-name">player name</label>
+                    <input id="game-player-name" class="game-input" maxlength="16" value="Player" autocomplete="off">
+                    <button id="game-create-room" class="game-button primary">create room</button>
+                    <div class="game-separator">or join a room</div>
+                    <label class="game-label" for="game-room-code">room code</label>
+                    <input id="game-room-code" class="game-input room-code-input" maxlength="6" placeholder="ABC123" autocomplete="off">
+                    <button id="game-join-room" class="game-button">join room</button>
+                    <button id="game-solo" class="game-button quiet">play solo preview</button>
+                    <p id="game-status" class="game-status" role="status">Solo preview is ready. Multiplayer needs the separate game Worker to be deployed.</p>
+                    <div class="game-divider"></div>
+                    <div class="game-small-title">how to play</div>
+                    <p class="game-help">Run across the platforms, jump between ledges and explore the shared world. Room capacity: five players.</p>
+                </aside>
+            </div>
+        </section>
     </main>
 
     <script src="script.js"></script>
