@@ -1,6 +1,6 @@
 # Diwali Town
 
-A lightweight, top-down 2D browser game set in a colourful Indian Diwali town. Built with vanilla JavaScript and Canvas so it can run on desktop and mobile browsers without a game engine download.
+A lightweight, top-down 2D browser game set in a colourful Indian Diwali town. Built with vanilla JavaScript and Canvas for desktop and mobile browsers.
 
 ## Current prototype
 
@@ -8,35 +8,34 @@ A lightweight, top-down 2D browser game set in a colourful Indian Diwali town. B
 - Responsive desktop and mobile layout
 - Diwali market, sweet shop, decoration shop, chai stall, NPCs, rangoli, diyas and lanterns
 - Interactions, shop purchases, wallet, inventory and a small quest
-- Cloudflare Worker + Durable Objects multiplayer room server scaffold (up to five players)
-- Local wallet, name and inventory saved in the browser
+- One shared public multiplayer world using a Cloudflare Worker and Durable Objects
+- Automatic public-world connection; no room codes or private rooms
+- Local wallet, name and inventory saved in each browser
 
 ## Run locally
 
-Because the game uses JavaScript modules, serve the folder with any static web server. For example, from the project root:
+Serve the folder with any static web server. From the project root:
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open http://localhost:8000.
-
-Opening index.html directly as a file may block module loading in some browsers.
+Then open http://localhost:8000. Opening index.html directly as a file may block JavaScript modules.
 
 ## Deploy frontend
 
 Deploy the repository root as a static site on Cloudflare Pages. No build command is required. The output directory is the repository root.
 
-## Deploy multiplayer
+## Deploy the public multiplayer server
 
-1. Install Node.js, then install Wrangler: `npm install -g wrangler`
-2. Run `wrangler login`
-3. From the repository root, run `wrangler deploy`
-4. Copy the deployed Worker HTTPS URL.
-5. Open `src/network.js` and set `serverUrl` to that URL.
-6. Commit and redeploy the frontend.
+1. Install Node.js.
+2. From the repository root, run `npm install -g wrangler`.
+3. Run `wrangler login` and approve Cloudflare access.
+4. Run `wrangler deploy`.
+5. Copy the Worker HTTPS URL.
+6. Set `serverUrl` in `src/network.js` to that URL, then commit the change to main so Pages redeploys.
 
-The Worker exposes a health check at `/health` and WebSocket rooms at `/room/ROOMCODE`. Each room supports up to five players.
+The Worker health check is at `/health`. All players connect to `/world`, which is routed to one permanent shared Durable Object. The prototype currently allows up to 50 simultaneous players.
 
 ## Controls
 
@@ -46,4 +45,4 @@ Mobile: drag the on-screen joystick to move; use the E button to interact and th
 
 ## Notes
 
-This is an early playable prototype, not a finished commercial game. The town, shops and local inventory are implemented. Multiplayer is a server scaffold and needs a real multi-device test after deployment. Audio, persistent cloud accounts, shared purchases, advanced quests, NPC pathfinding and richer character animation are planned for later milestones.
+This is an early playable prototype, not a finished commercial game. The shared world synchronizes player positions. Wallets, inventory, purchases and quest progress are still local to each browser and are not yet shared between players. Audio, cloud accounts, shared purchases, advanced quests, NPC pathfinding and richer character animation are future work.
