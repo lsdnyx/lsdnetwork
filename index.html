@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101722">
-  <meta name="description" content="Explore a colourful Diwali town with your friends in this free browser game.">
+  <meta name="description" content="Explore a colourful Diwali town with your friends.">
   <title>Diwali Town | lsdnetwork</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,81 +12,33 @@
   <link rel="stylesheet" href="styles/game.css">
 </head>
 <body>
-  <main class="app-shell">
-    <header class="topbar">
-      <a class="brand" href="#" aria-label="Diwali Town home">
-        <span class="brand-mark">✦</span>
-        <span><strong>DIWALI TOWN</strong><small>THE FESTIVAL IS BETTER TOGETHER</small></span>
-      </a>
-      <div class="topbar-right">
-        <div class="online-chip"><i></i><span id="connection-label">SOLO WORLD</span></div>
-        <button class="icon-button" id="sound-toggle" aria-label="Toggle sound" title="Toggle sound">♫</button>
-        <button class="icon-button" id="help-button" aria-label="How to play" title="How to play">?</button>
+  <main class="game-screen">
+    <canvas id="world" width="960" height="600" aria-label="Diwali Town game world"></canvas>
+    <div class="world-vignette"></div>
+    <div class="world-top-hud">
+      <div class="hud-left">
+        <div class="location-pill"><span class="location-dot"></span><span id="location-name">THE OLD MARKET</span></div>
+        <div class="wallet-pill">◉ <strong id="coin-count">100</strong></div>
       </div>
-    </header>
-
-    <section class="game-layout">
-      <div class="game-column">
-        <div class="game-frame">
-          <canvas id="world" width="960" height="600" aria-label="Diwali Town game world"></canvas>
-          <div class="world-vignette"></div>
-          <div class="world-top-hud">
-            <div class="location-pill"><span class="location-dot"></span><span id="location-name">THE OLD MARKET</span></div>
-            <div class="time-pill">✦ DIWALI NIGHT <span id="clock">8:00 PM</span></div>
-          </div>
-          <div class="toast" id="toast" aria-live="polite"></div>
-          <div class="interaction-hint" id="interaction-hint">Press E to interact</div>
-          <div class="mobile-controls" id="mobile-controls">
-            <div class="joystick-zone" id="joystick-zone" aria-label="Movement joystick">
-              <div class="joystick-base"><div class="joystick-knob" id="joystick-knob"></div></div>
-            </div>
-            <div class="mobile-action-stack">
-              <button class="mobile-action secondary" id="mobile-bag" aria-label="Open bag">▣</button>
-              <button class="mobile-action primary" id="mobile-interact" aria-label="Interact">E</button>
-            </div>
-          </div>
-          <div class="loading-cover" id="loading-cover"><div class="loading-lamp">✦</div><strong>WAKING UP THE TOWN</strong><span>Setting out the diyas…</span></div>
-        </div>
-        <div class="game-footer">
-          <span><kbd>WASD</kbd> <kbd>↑↓←→</kbd> MOVE</span>
-          <span><kbd>E</kbd> INTERACT</span>
-          <span><kbd>I</kbd> BAG</span>
-          <span class="footer-note">Works on desktop & touch screens</span>
-        </div>
+      <div class="hud-right">
+        <div class="time-pill">✦ DIWALI NIGHT <span id="clock">8:00 PM</span></div>
+        <button class="hud-button" id="settings-button" aria-label="Settings" title="Settings">⚙</button>
       </div>
-
-      <aside class="side-panel">
-        <section class="profile-card">
-          <div class="avatar" id="avatar">R</div>
-          <div class="profile-info"><span class="eyebrow">YOUR FESTIVAL ID</span><strong id="player-name-label">Guest</strong><small id="room-label">Exploring alone</small></div>
-          <button class="tiny-button" id="change-name" title="Change name">✎</button>
-        </section>
-
-        <section class="wallet-card">
-          <div><span class="eyebrow">YOUR WALLET</span><div class="coin-value"><span class="coin-icon">◉</span><strong id="coin-count">100</strong><small>coins</small></div></div>
-          <div class="wallet-sparkle">✧</div>
-        </section>
-
-        <section class="panel-section">
-          <div class="section-heading"><h2>YOUR LITTLE BAG</h2><button class="text-button" id="open-bag">VIEW ALL</button></div>
-          <div class="inventory-preview" id="inventory-preview"></div>
-        </section>
-
-        <section class="panel-section quest-section">
-          <div class="section-heading"><h2>TONIGHT'S QUEST</h2><span class="quest-star">✦</span></div>
-          <div class="quest-card"><div class="quest-icon">🏮</div><div class="quest-copy"><strong>Market wanderer</strong><p>Visit the sweet shop and meet the shopkeeper.</p><div class="quest-progress"><span id="quest-progress"></span></div><small id="quest-progress-label">0 / 2 completed</small></div></div>
-        </section>
-
-        <section class="panel-section friends-section">
-          <div class="section-heading"><h2>YOUR TOWN</h2><span class="player-count" id="player-count">1 / 5</span></div>
-          <div class="friend-list" id="friend-list"><div class="friend-row"><span class="friend-dot you"></span><span>You</span><small>here now</small></div></div>
-          <div class="room-actions"><button class="button button-primary" id="create-room">CREATE FRIEND ROOM</button><div class="join-row"><input id="room-code" maxlength="8" placeholder="ROOM CODE" aria-label="Room code"><button class="button button-outline" id="join-room">JOIN</button></div></div>
-        </section>
-
-        <div class="side-tip"><span>✧</span> A little kindness makes every festival brighter.</div>
-      </aside>
-    </section>
-    <footer class="site-footer">A tiny world made for big celebrations <span>✦</span> lsdnetwork</footer>
+    </div>
+    <div class="room-status" id="connection-label">SOLO WORLD</div>
+    <div class="toast" id="toast" aria-live="polite"></div>
+    <div class="interaction-hint" id="interaction-hint">Press E to interact</div>
+    <div class="mobile-controls" id="mobile-controls">
+      <div class="joystick-zone" id="joystick-zone" aria-label="Movement joystick">
+        <div class="joystick-base"><div class="joystick-knob" id="joystick-knob"></div></div>
+      </div>
+      <div class="mobile-action-stack">
+        <button class="mobile-action secondary" id="mobile-bag" aria-label="Open bag">▣</button>
+        <button class="mobile-action primary" id="mobile-interact" aria-label="Interact">E</button>
+      </div>
+    </div>
+    <div class="desktop-help"><kbd>WASD</kbd> MOVE <kbd>E</kbd> INTERACT <kbd>I</kbd> BAG</div>
+    <div class="loading-cover" id="loading-cover"><div class="loading-lamp">✦</div><strong>WAKING UP THE TOWN</strong><span>Setting out the diyas…</span></div>
   </main>
 
   <div class="modal-backdrop" id="modal-backdrop" hidden>
@@ -98,7 +50,6 @@
       <div class="modal-actions" id="modal-actions"></div>
     </section>
   </div>
-
   <script type="module" src="src/main.js"></script>
 </body>
 </html>

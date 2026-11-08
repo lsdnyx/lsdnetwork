@@ -1,69 +1,27 @@
-:root{font-family:"Outfit",system-ui,sans-serif;color:#f8f1e7;background:#101722;font-synthesis:none;--gold:#f5c96a;--muted:#a9b0bb;--panel:#1a2431;--line:#303d4d;--cream:#fff4dd}
+:root{font-family:"Outfit",system-ui,sans-serif;color:#f8f1e7;background:#101722;--gold:#f5c96a;--muted:#a9b0bb;--line:#303d4d}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 48% -10%,#29374a 0,#101722 62%);color:#f8f1e7}
-button,input{font:inherit}
-button{touch-action:manipulation}
-.app-shell{width:min(1440px,calc(100% - 36px));margin:0 auto;padding:22px 0 18px}
-.topbar{height:54px;display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
-.brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#ffe6a4,#e7a842);color:#56351b;display:grid;place-items:center;font-size:25px;box-shadow:0 5px 20px #f0b64a33}
-.brand strong{display:block;font-size:14px;letter-spacing:.12em;font-weight:800}
-.brand small{display:block;color:#a7b1bf;font:9px "DM Mono",monospace;letter-spacing:.1em;margin-top:3px}
-.topbar-right{display:flex;align-items:center;gap:9px}
-.online-chip{border:1px solid #355245;background:#182c29;color:#a7e0b4;border-radius:999px;padding:8px 12px;font:9px "DM Mono",monospace;display:flex;gap:8px;align-items:center}
-.online-chip i,.location-dot{width:7px;height:7px;border-radius:50%;background:#77d59b;box-shadow:0 0 10px #77d59b;display:inline-block}
-.icon-button{height:34px;width:34px;border-radius:50%;border:1px solid var(--line);background:#202b39;color:#e8dfd2;cursor:pointer}
-.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:stretch}
-.game-column{min-width:0}
-.game-frame{position:relative;overflow:hidden;border-radius:15px;border:1px solid #46515e;background:#17252a;box-shadow:0 20px 55px #0005;isolation:isolate}
-#world{display:block;width:100%;height:auto;aspect-ratio:8/5;image-rendering:pixelated;touch-action:none}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101722}
+button,input{font:inherit}button{touch-action:manipulation;cursor:pointer}
+.game-screen{position:fixed;inset:0;overflow:hidden;background:#17252a}
+#world{display:block;width:100%;height:100%;touch-action:none;image-rendering:pixelated}
 .world-vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 100px #111a2a55,inset 0 -50px 70px #131d2855}
-.world-top-hud{position:absolute;top:14px;left:15px;right:15px;display:flex;justify-content:space-between;pointer-events:none;gap:8px}
-.location-pill,.time-pill{padding:8px 11px;border:1px solid #ffffff26;background:#17212bd9;backdrop-filter:blur(8px);border-radius:7px;color:#fff3dc;font:9px "DM Mono",monospace;letter-spacing:.06em}
-.location-pill{display:flex;align-items:center;gap:8px}.location-dot{background:#ffc96c;box-shadow:0 0 10px #ffc96c}
-.time-pill{color:#f7d891}
-.toast{position:absolute;top:60px;left:50%;transform:translate(-50%,-8px);opacity:0;transition:.22s;background:#17212bed;border:1px solid #ffffff35;border-radius:7px;padding:9px 14px;color:#fff3dd;font-size:12px;pointer-events:none;max-width:85%;text-align:center}
+.world-top-hud{position:absolute;top:max(14px,env(safe-area-inset-top));left:max(15px,env(safe-area-inset-left));right:max(15px,env(safe-area-inset-right));display:flex;justify-content:space-between;align-items:center;pointer-events:none;gap:8px}
+.hud-left,.hud-right{display:flex;align-items:center;gap:8px}.hud-left>* ,.hud-right>*{pointer-events:auto}
+.location-pill,.time-pill,.wallet-pill{padding:9px 12px;border:1px solid #ffffff30;background:#17212bdc;backdrop-filter:blur(8px);border-radius:8px;color:#fff3dc;font:10px "DM Mono",monospace;letter-spacing:.05em}
+.location-pill{display:flex;align-items:center;gap:8px}.location-dot{width:7px;height:7px;border-radius:50%;background:#ffc96c;box-shadow:0 0 10px #ffc96c;display:inline-block}
+.wallet-pill{color:#f7d891}.wallet-pill strong{font-size:13px}
+.time-pill{color:#f7d891}.hud-button{width:40px;height:40px;border:1px solid #ffffff44;border-radius:9px;background:#17212be8;color:#ffe2a0;font-size:21px}
+.room-status{position:absolute;top:68px;right:17px;padding:6px 9px;border-radius:6px;background:#17212bd9;border:1px solid #ffffff25;color:#c7d7cb;font:9px "DM Mono",monospace;pointer-events:none}
+.toast{position:absolute;top:75px;left:50%;transform:translate(-50%,-8px);opacity:0;transition:.22s;background:#17212bed;border:1px solid #ffffff35;border-radius:7px;padding:9px 14px;color:#fff3dd;font-size:12px;pointer-events:none;max-width:85%;text-align:center;z-index:4}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-.interaction-hint{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);background:#17212be8;border:1px solid #ffffff38;padding:8px 13px;border-radius:7px;color:#fff3df;font:10px "DM Mono",monospace;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap}
+.interaction-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:#17212be8;border:1px solid #ffffff38;padding:9px 14px;border-radius:7px;color:#fff3df;font:10px "DM Mono",monospace;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap}
 .interaction-hint.visible{opacity:1}
+.desktop-help{position:absolute;bottom:14px;right:16px;color:#e1e7edb8;font:9px "DM Mono",monospace;display:flex;align-items:center;gap:7px;pointer-events:none}
+kbd{padding:4px 6px;border:1px solid #ffffff40;border-radius:4px;background:#17212bd9;color:#fff;font:9px "DM Mono",monospace}
 .loading-cover{position:absolute;inset:0;background:#17212b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;z-index:5;transition:opacity .35s}
-.loading-cover.done{opacity:0;pointer-events:none}
-.loading-lamp{font-size:34px;color:var(--gold);animation:glow 1.3s ease-in-out infinite alternate}
+.loading-cover.done{opacity:0;pointer-events:none}.loading-lamp{font-size:34px;color:var(--gold);animation:glow 1.3s ease-in-out infinite alternate}
 .loading-cover strong{font-size:11px;letter-spacing:.16em}.loading-cover span{color:var(--muted);font-size:11px}
 @keyframes glow{to{filter:drop-shadow(0 0 16px #ffc65e);transform:scale(1.08)}}
-.game-footer{display:flex;gap:14px;flex-wrap:wrap;align-items:center;padding:11px 3px;color:#a9b2bf;font:9px "DM Mono",monospace}
-kbd{padding:4px 6px;border:1px solid #39495b;border-radius:4px;background:#202b39;color:#fff;font:9px "DM Mono",monospace}
-.footer-note{margin-left:auto;color:#7f8b9a}
-.side-panel{background:linear-gradient(160deg,#202c3b,#18212c);border:1px solid #344254;border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.profile-card{display:flex;align-items:center;gap:10px;padding:2px 1px 5px}
-.avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#f3c56c,#d98250);display:grid;place-items:center;color:#492b1c;font-weight:800;font-size:16px}
-.profile-info{min-width:0;flex:1}.profile-info strong,.profile-info small{display:block}.profile-info strong{font-size:13px;margin-top:2px}.profile-info small{font-size:10px;color:var(--muted);margin-top:2px}
-.eyebrow{display:block;font:8px "DM Mono",monospace;letter-spacing:.13em;color:#9caaba}
-.tiny-button{border:1px solid var(--line);background:#243142;color:#d5deea;border-radius:6px;width:29px;height:29px;cursor:pointer}
-.wallet-card{border:1px solid #65543a;background:linear-gradient(110deg,#453824,#302d2a);border-radius:9px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between}
-.coin-value{display:flex;align-items:baseline;gap:6px;margin-top:6px}.coin-icon{font-size:19px;color:#ffcf6b}.coin-value strong{font-size:24px;color:#ffe2a0}.coin-value small{font-size:10px;color:#d0b98e}.wallet-sparkle{font-size:30px;color:#f5ca75;opacity:.75}
-.panel-section{border-top:1px solid #344254;padding-top:12px}
-.section-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.section-heading h2{font:9px "DM Mono",monospace;letter-spacing:.12em;color:#b9c3d0;margin:0}
-.text-button{border:0;background:none;color:#e6c57e;font:8px "DM Mono",monospace;cursor:pointer;padding:4px}
-.inventory-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.inventory-slot{height:48px;border:1px solid #3a4859;border-radius:7px;background:#202c3a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative}
-.inventory-slot .item-emoji{font-size:18px}.inventory-slot small{font:8px "DM Mono",monospace;color:#bdc7d3}.inventory-slot.empty{opacity:.4}
-.quest-star{color:#f5c96a}.quest-card{display:flex;gap:10px;align-items:flex-start;padding:10px;background:#222f3d;border:1px solid #39495a;border-radius:8px}
-.quest-icon{font-size:23px}.quest-copy{flex:1}.quest-copy strong{font-size:11px}.quest-copy p{font-size:10px;line-height:1.45;color:#aeb9c6;margin:4px 0 9px}
-.quest-progress{height:5px;background:#3a4858;border-radius:99px;overflow:hidden}.quest-progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#dba64f,#f8d887);transition:width .3s}.quest-copy>small{display:block;color:#9caaba;font:8px "DM Mono",monospace;margin-top:5px}
-.player-count{font:9px "DM Mono",monospace;color:#f2d18c}
-.friend-list{display:grid;gap:7px;margin-bottom:10px}
-.friend-row{display:flex;align-items:center;gap:8px;color:#e6eaf0;font-size:10px}.friend-row small{margin-left:auto;color:#91a0b2;font-size:9px}
-.friend-dot{width:7px;height:7px;background:#7bd59a;border-radius:50%}.friend-dot.you{background:#f4c66b}
-.room-actions{display:grid;gap:7px}
-.button{border-radius:6px;padding:10px 8px;font:9px "DM Mono",monospace;letter-spacing:.06em;cursor:pointer}
-.button-primary{background:linear-gradient(110deg,#f5d78d,#eab95c);color:#352716;border:1px solid #f9dc99;font-weight:500}
-.button-outline{background:#273547;color:#e7edf4;border:1px solid #4a5a6e}
-.join-row{display:grid;grid-template-columns:1fr 70px;gap:6px}
-.join-row input{min-width:0;background:#141d28;border:1px solid #3b4a5c;border-radius:6px;padding:9px;color:#fff;font:9px "DM Mono",monospace;text-transform:uppercase}
-.side-tip{margin-top:auto;padding:10px 8px;color:#9eacba;font-size:9px;line-height:1.5;border-top:1px solid #344254}.side-tip span{color:#f5ca75;margin-right:5px}
-.site-footer{text-align:center;padding:17px 0 0;color:#667588;font:9px "DM Mono",monospace}.site-footer span{color:#e7bd69;margin:0 5px}
 .mobile-controls{display:none;position:absolute;inset:auto 0 0 0;height:155px;align-items:end;justify-content:space-between;padding:14px 17px;pointer-events:none}
 .joystick-zone{width:118px;height:118px;display:grid;place-items:center;pointer-events:auto;touch-action:none}
 .joystick-base{width:100px;height:100px;border-radius:50%;background:#101c2a88;border:1px solid #ffffff55;display:grid;place-items:center;backdrop-filter:blur(3px)}
@@ -72,13 +30,18 @@ kbd{padding:4px 6px;border:1px solid #39495b;border-radius:4px;background:#202b3
 .mobile-action{border-radius:50%;width:53px;height:53px;border:1px solid #fff8;box-shadow:0 4px 12px #0005;font-weight:700;font-size:16px}
 .mobile-action.primary{background:#f5ce7b;color:#49321b}.mobile-action.secondary{width:43px;height:43px;background:#253548;color:#fff}
 .modal-backdrop{position:fixed;inset:0;background:#080d16c9;backdrop-filter:blur(7px);z-index:20;display:grid;place-items:center;padding:16px}
-.modal-backdrop[hidden]{display:none}
-.modal{width:min(430px,100%);max-height:min(82vh,680px);overflow:auto;position:relative;background:linear-gradient(145deg,#263547,#182330);border:1px solid #506075;border-radius:14px;padding:24px;box-shadow:0 25px 90px #0009}
-.modal-close{position:absolute;right:13px;top:12px;border:1px solid #4b5b6e;background:#263548;color:#fff;border-radius:50%;width:30px;height:30px;font-size:20px;cursor:pointer}
-.modal-kicker{font:9px "DM Mono",monospace;color:#eac77e;letter-spacing:.16em}.modal h2{font-size:24px;margin:8px 0 14px}.modal-content{font-size:13px;line-height:1.65;color:#cbd4df}.modal-content p{margin:7px 0 13px}.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.modal-actions button{flex:1;min-width:120px}
+.modal-backdrop[hidden]{display:none}.modal{width:min(440px,100%);max-height:min(86vh,720px);overflow:auto;position:relative;background:linear-gradient(145deg,#263547,#182330);border:1px solid #506075;border-radius:14px;padding:24px;box-shadow:0 25px 90px #0009}
+.modal-close{position:absolute;right:13px;top:12px;border:1px solid #4b5b6e;background:#263548;color:#fff;border-radius:50%;width:30px;height:30px;font-size:20px}
+.modal-kicker{font:9px "DM Mono",monospace;color:#eac77e;letter-spacing:.16em}.modal h2{font-size:24px;margin:8px 0 14px}.modal-content{font-size:13px;line-height:1.65;color:#cbd4df}.modal-content p{margin:7px 0 13px}
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.modal-actions button{flex:1;min-width:120px}
+.button{border-radius:7px;padding:11px 10px;font:10px "DM Mono",monospace;letter-spacing:.04em}
+.button-primary{background:linear-gradient(110deg,#f5d78d,#eab95c);color:#352716;border:1px solid #f9dc99}
+.button-outline{background:#273547;color:#e7edf4;border:1px solid #4a5a6e}.button-danger{width:100%;margin-top:9px;background:#492c32;color:#ffd9d9;border:1px solid #85515b}
+.settings-group{display:grid;gap:6px;margin:12px 0}.settings-group label{font:9px "DM Mono",monospace;color:#e7c982;letter-spacing:.08em}
+.settings-group input{width:100%;background:#121c28;color:white;border:1px solid #43536a;border-radius:7px;padding:11px;font-size:13px}
+.settings-status{font-size:11px;color:#b9c7d5;padding:8px 0}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.settings-wide{width:100%;margin-top:9px}.settings-note{font-size:10px;color:#95a5b7;margin-top:14px}
+.room-code-display{font:700 26px "DM Mono",monospace;letter-spacing:.2em;text-align:center;padding:18px;background:#111c29;border:1px dashed #dcb96d;border-radius:9px;color:#ffe1a0}
 .shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.shop-item{padding:12px;background:#1a2634;border:1px solid #3b4c60;border-radius:8px}.shop-item .emoji{font-size:24px}.shop-item strong{display:block;font-size:12px;margin:4px 0}.shop-item small{color:#aebaca;font-size:10px}.shop-item button{width:100%;margin-top:9px}
 .bag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.bag-cell{padding:11px 6px;text-align:center;background:#1a2634;border:1px solid #3b4c60;border-radius:8px}.bag-cell b{display:block;font-size:23px}.bag-cell span{display:block;font-size:9px;margin-top:4px}.bag-cell small{color:#aebaca;font-size:9px}
-@media(hover:none),(pointer:coarse){.mobile-controls{display:flex}.game-footer{display:none}.interaction-hint{bottom:160px}}
-@media(max-width:1050px){.game-layout{grid-template-columns:minmax(0,1fr) 285px}.app-shell{width:calc(100% - 24px)}}
-@media(max-width:780px){.app-shell{width:100%;padding:10px 10px calc(12px + env(safe-area-inset-bottom))}.topbar{height:45px;margin:0 3px 10px}.brand-mark{width:33px;height:33px}.brand strong{font-size:12px}.brand small{font-size:7px}.online-chip{font-size:8px;padding:7px 9px}.icon-button{width:31px;height:31px}.game-layout{grid-template-columns:1fr;gap:9px}.game-frame{border-radius:10px}.side-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:11px;border-radius:10px}.profile-card,.wallet-card{min-height:62px}.panel-section{min-width:0}.quest-section,.friends-section{grid-column:span 1}.friends-section{grid-column:1/-1}.friend-list{grid-template-columns:1fr 1fr}.side-tip{grid-column:1/-1;margin-top:0}.site-footer{padding-top:10px}.game-footer{display:none}}
-@media(max-width:480px){.world-top-hud{top:7px;left:7px;right:7px}.location-pill,.time-pill{font-size:7px;padding:6px 7px}.side-panel{grid-template-columns:1fr 1fr}.quest-section{grid-column:1/-1}.quest-card{padding:8px}.friends-section{grid-column:1/-1}.mobile-controls{height:132px;padding:9px 10px}.joystick-zone{width:106px;height:106px}.joystick-base{width:88px;height:88px}.mobile-action{width:49px;height:49px}.mobile-action.secondary{width:39px;height:39px}.interaction-hint{bottom:135px;font-size:9px}.modal{padding:20px}.modal h2{font-size:21px}}
+@media(hover:none),(pointer:coarse){.mobile-controls{display:flex}.desktop-help{display:none}.interaction-hint{bottom:160px}}
+@media(max-width:520px){.world-top-hud{top:max(8px,env(safe-area-inset-top));left:8px;right:8px}.location-pill,.time-pill,.wallet-pill{font-size:8px;padding:7px 8px}.hud-left,.hud-right{gap:5px}.hud-button{width:36px;height:36px}.room-status{top:54px;right:9px;font-size:8px}.mobile-controls{height:132px;padding:9px 10px}.joystick-zone{width:106px;height:106px}.joystick-base{width:88px;height:88px}.mobile-action{width:49px;height:49px}.mobile-action.secondary{width:39px;height:39px}.interaction-hint{bottom:135px;font-size:9px}.modal{padding:20px}.modal h2{font-size:21px}}

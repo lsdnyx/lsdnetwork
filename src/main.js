@@ -3,21 +3,26 @@ import {World} from "./world.js";
 import {Player} from "./player.js";
 import {Network} from "./network.js";
 import {UI} from "./ui.js";
-import {NPCS,BUILDINGS,STALLS,COLORS,WORLD} from "./config.js";
+import {NPCS,BUILDINGS,STALLS,WORLD} from "./config.js";
 
 class DiwaliGame{
   constructor(){
     this.canvas=document.getElementById("world");this.ctx=this.canvas.getContext("2d");this.world=new World();this.input=new Input(this.canvas);
     this.player=new Player({name:localStorage.getItem("diwali-name")||"Guest"});this.camera={x:0,y:0};this.network=new Network(this);this.ui=new UI(this);
     this.coins=Number(localStorage.getItem("diwali-coins")||100);this.inventory=JSON.parse(localStorage.getItem("diwali-inventory")||"{}");this.quest=JSON.parse(localStorage.getItem("diwali-quest")||'{"shop":false,"talk":false}');
-    this.otherPlayers=new Map();this.nearby=null;this.soundOn=false;this.audio=null;this.last=0;this.time=0;this.toastShown=false;
+    this.otherPlayers=new Map();this.nearby=null;this.soundOn=false;this.last=0;this.time=0;
     this.ui.refresh();this.resize();addEventListener("resize",()=>this.resize());requestAnimationFrame(t=>this.frame(t));
     setTimeout(()=>document.getElementById("loading-cover").classList.add("done"),550);
     this.ui.toast("Welcome! Wander over to the market and say hello.");
   }
-  resize(){const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;this.canvas.width=Math.round(r.width*d);this.canvas.height=Math.round(r.width*600/960*d);this.ctx.setTransform(this.canvas.width/960,0,0,this.canvas.height/600,0,0)}
+  resize(){
+    const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);
+    if(!r.width||!r.height)return;
+    this.canvas.width=Math.round(r.width*d);this.canvas.height=Math.round(r.height*d);
+    this.ctx.setTransform(this.canvas.width/960,0,0,this.canvas.height/600,0,0);
+  }
   save(){localStorage.setItem("diwali-name",this.player.name);localStorage.setItem("diwali-coins",String(this.coins));localStorage.setItem("diwali-inventory",JSON.stringify(this.inventory));localStorage.setItem("diwali-quest",JSON.stringify(this.quest))}
-  createRoom(){const code=Math.random().toString(36).slice(2,8).toUpperCase();document.getElementById("room-code").value=code;this.network.connect(code)}
+  createRoom(){const code=Math.random().toString(36).slice(2,8).toUpperCase();this.network.connect(code);this.ui.showRoomCode(code)}
   joinRoom(code){const clean=String(code||"").trim().toUpperCase();if(!/^[A-Z0-9]{4,8}$/.test(clean)){this.ui.toast("Enter a room code with 4–8 letters or numbers.");return}this.network.connect(clean)}
   applyNetworkState(players){
     for(const p of players){if(p.id===this.network.playerId){this.player.x=p.x;this.player.y=p.y;continue}
@@ -37,7 +42,7 @@ class DiwaliGame{
     return nearest;
   }
   interact(){if(this.nearby)this.ui.interact(this.nearby);else this.ui.toast("Nothing nearby to interact with. Explore the town!")}
-  toggleSound(){this.soundOn=!this.soundOn;document.getElementById("sound-toggle").textContent=this.soundOn?"♫":"♪";this.ui.toast(this.soundOn?"Sound toggle is on. Ambient audio will be added in a later update.":"Sound muted.")}
+  toggleSound(){this.soundOn=!this.soundOn;this.ui.toast(this.soundOn?"Sound toggle is on. Ambient audio will be added in a later update.":"Sound muted.")}
   frame(t){
     const dt=Math.min((t-this.last)/1000||0,.04);this.last=t;this.time=t;
     const move=this.input.getMovement();
@@ -55,9 +60,8 @@ class DiwaliGame{
   render(){
     const ctx=this.ctx;ctx.clearRect(0,0,960,600);ctx.save();ctx.translate(-this.camera.x,-this.camera.y);
     this.world.draw(ctx,this.camera,this.time);
-    for(const other of this.otherPlayers.values())other.draw(ctx,this.camera);
-    this.player.draw(ctx,this.camera);
-    // gentle festival sparkles
+    for(const other of this.otherPlayers.values())other.draw(ctx);
+    this.player.draw(ctx);
     for(let i=0;i<15;i++){const x=(i*167+this.time*.012)%WORLD.width,y=90+(i*113)%1400;ctx.fillStyle="rgba(255,221,150,"+(.15+.15*Math.sin(this.time/450+i))+")";ctx.fillRect(x,y,2,2)}
     ctx.restore();
   }

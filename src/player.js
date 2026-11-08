@@ -8,8 +8,9 @@ export class Player {
     if(Math.abs(dx)+Math.abs(dy)>.1){this.facing=dx<0?-1:dx>0?1:this.facing;this.walkTime+=dt*12}
     world.move(this,dx,dy);
   }
-  draw(ctx,camera){
-    const x=Math.round(this.x-camera.x),y=Math.round(this.y-camera.y),step=Math.sin(this.walkTime)*2;
+  draw(ctx){
+    // The world renderer already moves the camera. Draw in world coordinates here.
+    const x=Math.round(this.x),y=Math.round(this.y),step=Math.sin(this.walkTime)*2;
     ctx.fillStyle="#15251e66";ctx.beginPath();ctx.ellipse(x+13,y+34,13,4,0,0,Math.PI*2);ctx.fill();
     ctx.save();if(this.facing<0){ctx.translate(x+26,0);ctx.scale(-1,1)}else ctx.translate(x,0);
     ctx.fillStyle="#45312c";ctx.fillRect(6,y+23+step,6,11);ctx.fillRect(16,y+23-step,6,11);
@@ -19,7 +20,7 @@ export class Player {
     ctx.fillStyle="#fff0cf";ctx.fillRect(9,y+5,2,2);ctx.fillRect(18,y+5,2,2);
     ctx.fillStyle="#f4d4a4";ctx.fillRect(0,y+15,4,11);ctx.fillRect(24,y+15,4,11);
     ctx.restore();
-    ctx.fillStyle=this.local?"#fff0cf":"#e4eaf0";ctx.font="10px sans-serif";ctx.textAlign="center";ctx.fillText(this.name.slice(0,13),x+13,y-9);
-    if(this.local){ctx.fillStyle="#f2ca73";ctx.fillRect(x+11,y-16,4,4)}
+    ctx.fillStyle=this.local?"#fff0cf":"#e4eaf0";ctx.font="bold 12px sans-serif";ctx.textAlign="center";ctx.fillText(this.name.slice(0,13),x+13,y-10);
+    if(this.local){ctx.fillStyle="#f2ca73";ctx.beginPath();ctx.arc(x+13,y-17,3,0,Math.PI*2);ctx.fill()}
   }
 }
