@@ -1,207 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Project - Clean Media Tool</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Phosphor Icons for clean SVG icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#11151b">
+<title>Pixel World | lsdnetwork</title>
+<style>
+:root{color-scheme:dark;--bg:#101319;--panel:#1a2029;--line:#303a48;--muted:#91a0b2;--white:#f4f6f8;--green:#9be27d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#202b36 0,#101319 55%);color:var(--white);font-family:ui-monospace,Consolas,monospace}
+button,input{font:inherit}
+.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:28px 0 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:38px;height:38px;background:var(--green);color:#172016;display:grid;place-items:center;font-weight:900;font-size:21px;box-shadow:4px 4px 0 #527c45}
+h1{font-size:17px;letter-spacing:.08em;margin:0}.sub{color:var(--muted);font-size:11px;margin-top:5px}
+.online{font-size:11px;color:var(--green);border:1px solid #3e6240;padding:8px 10px;border-radius:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;align-items:start}
+.game{min-width:0}.screen{position:relative;border:1px solid var(--line);background:#91d7e9;overflow:hidden;box-shadow:0 18px 50px #0006}
+canvas{display:block;width:100%;height:auto;image-rendering:pixelated}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
+.hud span{background:#101820dd;border:1px solid #ffffff35;color:white;padding:7px 9px;border-radius:3px;font-size:10px}
+.hint{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:12px 2px}
+kbd{color:#fff;background:#252e39;border:1px solid #455263;border-radius:3px;padding:4px 6px;font:inherit}
+.panel{background:var(--panel);border:1px solid var(--line);padding:17px;border-radius:5px}
+.panel h2{font-size:13px;margin:0 0 17px;letter-spacing:.05em}
+label{display:block;color:var(--muted);font-size:10px;margin:13px 0 7px}
+input{width:100%;padding:11px 10px;border:1px solid var(--line);background:#10151b;color:white;border-radius:3px;outline:none;user-select:text}
+input:focus{border-color:#9be27d}
+button{width:100%;border:1px solid #435064;background:#283342;color:white;padding:11px 9px;margin-top:9px;border-radius:3px;cursor:pointer;font-size:11px}
+button:hover{filter:brightness(1.18)}button.primary{background:var(--green);color:#152014;border-color:var(--green);font-weight:900}
+button.ghost{background:transparent;color:var(--muted)}
+.or{font-size:10px;color:var(--muted);text-align:center;margin:17px 0 4px}
+.status{font-size:10px;line-height:1.65;color:#c0ccd7;min-height:48px;margin:14px 0 0;overflow-wrap:anywhere}
+.rule{height:1px;background:var(--line);margin:15px 0}
+.help{font-size:10px;line-height:1.7;color:var(--muted);margin:0}
+footer{color:#637184;font-size:10px;margin-top:22px;line-height:1.7}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.panel{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.panel h2,.status,.rule,.help,.or{grid-column:1/-1}.panel button{align-self:end}.status{min-height:0}}
+@media(max-width:560px){.shell{width:calc(100% - 20px);padding-top:18px}.panel{display:block}.online{font-size:9px}.hint{font-size:9px}}
+</style>
 </head>
 <body>
-
-    <!-- Sidebar Navigation -->
-    <nav class="sidebar">
-        <div class="nav-top">
-            <button class="logo-btn"><i class="ph ph-caret-double-right"></i></button>
-        </div>
-        
-        <div class="nav-links">
-            <button class="nav-item active" data-target="save">
-                <i class="ph ph-download-simple"></i>
-                <span>save</span>
-            </button>
-            <button class="nav-item" data-target="remux">
-                <i class="ph ph-arrows-left-right"></i>
-                <span>remux</span>
-            </button>
-            <!-- Spacer -->
-            <div style="flex-grow: 1;"></div>
-            
-            <button class="nav-item" data-target="settings">
-                <i class="ph ph-gear"></i>
-                <span>settings</span>
-            </button>
-            <button class="nav-item" data-target="donate">
-                <i class="ph ph-heart"></i>
-                <span>donate</span>
-            </button>
-            <button class="nav-item" data-target="updates">
-                <i class="ph ph-megaphone"></i>
-                <span>updates</span>
-            </button>
-            <button class="nav-item" data-target="about">
-                <i class="ph ph-info"></i>
-                <span>about</span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Main Content Area -->
-    <main class="content">
-        
-        <!-- Top Right Action Button -->
-        <div class="top-action">
-            <button class="circle-btn"><i class="ph ph-arrow-down"></i></button>
-        </div>
-
-        <!-- SAVE PAGE -->
-        <section id="page-save" class="page active">
-            <div class="save-container">
-                <div class="hero-graphic">
-                    <!-- Placeholder for your mascot/logo -->
-                    <div class="mascot-placeholder">
-                        <i class="ph ph-cat" style="font-size: 100px;"></i>
-                    </div>
-                </div>
-
-                <div class="input-area">
-                    <div class="input-box">
-                        <i class="ph ph-link"></i>
-                        <input type="text" placeholder="paste the link here">
-                    </div>
-                    <div class="input-options">
-                        <div class="option-group">
-                            <button class="opt-btn active"><i class="ph ph-sparkle"></i> auto</button>
-                            <button class="opt-btn"><i class="ph ph-music-notes"></i> audio</button>
-                            <button class="opt-btn"><i class="ph ph-speaker-slash"></i> mute</button>
-                        </div>
-                        <button class="opt-btn"><i class="ph ph-clipboard"></i> paste</button>
-                    </div>
-                </div>
-                
-                <p class="terms-text">by continuing, you agree to <a href="#">terms and ethics of use</a></p>
-            </div>
-        </section>
-
-        <!-- ABOUT PAGE -->
-        <section id="page-about" class="page">
-            <div class="page-header">
-                <h2>about</h2>
-            </div>
-            <div class="about-layout">
-                <div class="about-sidebar">
-                    <button class="side-tab active">what's this?</button>
-                    <button class="side-tab">community & support</button>
-                    <button class="side-tab">privacy policy</button>
-                    <button class="side-tab">terms and ethics</button>
-                    <button class="side-tab">thanks & licenses</button>
-                </div>
-                <div class="about-content">
-                    <h3>best way to save what you love <i class="ph ph-arrow-up-right"></i></h3>
-                    <p>This tool helps you save anything from your favorite websites: video, audio, photos or gifs. just paste the link and you're ready to rock!</p>
-                    <p>no ads, trackers, paywalls, or other nonsense. just a convenient web app that works anywhere, whenever you need it.</p>
-                    
-                    <br>
-                    <h3>motivation <i class="ph ph-arrow-up-right"></i></h3>
-                    <p>This project was created for public benefit, to protect people from ads and malware pushed by alternative downloaders. we believe that the best software is safe, open, and accessible.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SETTINGS PAGE -->
-        <section id="page-settings" class="page">
-            <div class="page-header">
-                <span class="version">v1.0.0</span>
-                <h2>settings</h2>
-            </div>
-            
-            <div class="settings-layout">
-                <!-- Settings Sidebar -->
-                <div class="settings-nav">
-                    <button class="set-tab active" data-set="appearance"><i class="ph ph-sun"></i> appearance</button>
-                    <button class="set-tab" data-set="accessibility"><i class="ph ph-wheelchair"></i> accessibility</button>
-                    <button class="set-tab" data-set="video"><i class="ph ph-film-strip"></i> video</button>
-                    <button class="set-tab" data-set="audio"><i class="ph ph-music-note"></i> audio</button>
-                    <button class="set-tab" data-set="metadata"><i class="ph ph-file-text"></i> metadata</button>
-                </div>
-
-                <!-- Settings Content -->
-                <div class="settings-content">
-                    
-                    <!-- Appearance Sub-page -->
-                    <div class="set-panel active" id="set-appearance">
-                        <div class="setting-group">
-                            <label>theme <i class="ph ph-arrow-up-right"></i></label>
-                            <div class="segmented-control">
-                                <button class="active">auto</button>
-                                <button>light</button>
-                                <button>dark</button>
-                            </div>
-                            <p class="desc">auto theme switches between light and dark themes depending on your device's display mode.</p>
-                        </div>
-                        
-                        <div class="setting-group">
-                            <label>language <i class="ph ph-arrow-up-right"></i></label>
-                            <div class="toggle-row">
-                                <span>automatic selection</span>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                            <div class="dropdown">
-                                <span>preferred language</span>
-                                <span>english <i class="ph ph-caret-down"></i></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Video Sub-page -->
-                    <div class="set-panel" id="set-video">
-                        <div class="setting-group">
-                            <label>video quality <i class="ph ph-arrow-up-right"></i></label>
-                            <div class="segmented-control wrap">
-                                <button>8k+</button>
-                                <button>4k</button>
-                                <button class="active">1080p</button>
-                                <button>720p</button>
-                                <button>480p</button>
-                            </div>
-                            <p class="desc">if preferred video quality isn't available, next best is picked instead.</p>
-                        </div>
-                        
-                        <div class="setting-group">
-                            <label>youtube file container <i class="ph ph-arrow-up-right"></i></label>
-                            <div class="segmented-control">
-                                <button class="active">auto</button>
-                                <button>mp4</button>
-                                <button>webm</button>
-                                <button>mkv</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Audio Sub-page -->
-                    <div class="set-panel" id="set-audio">
-                        <div class="setting-group">
-                            <label>audio bitrate <i class="ph ph-arrow-up-right"></i></label>
-                            <div class="segmented-control wrap">
-                                <button>320kb/s</button>
-                                <button>256kb/s</button>
-                                <button class="active">128kb/s</button>
-                                <button>96kb/s</button>
-                                <button>64kb/s</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-        
-    </main>
-
-    <script src="script.js"></script>
+<div class="shell">
+<header>
+  <div class="brand"><div class="mark">P</div><div><h1>PIXEL WORLD</h1><div class="sub">a tiny multiplayer platformer</div></div></div>
+  <div class="online">● ROOM CAPACITY: 5</div>
+</header>
+<main class="layout">
+  <section class="game">
+    <div class="screen">
+      <canvas id="game" width="960" height="540" aria-label="Pixel World platform game"></canvas>
+      <div class="hud"><span id="players">SOLO PREVIEW</span><span id="room">NO ROOM</span></div>
+    </div>
+    <div class="hint">MOVE <kbd>A</kbd><kbd>D</kbd> OR <kbd>←</kbd><kbd>→</kbd><span>JUMP</span><kbd>SPACE</kbd><kbd>W</kbd><kbd>↑</kbd></div>
+  </section>
+  <aside class="panel">
+    <h2>PLAY WITH FRIENDS</h2>
+    <div><label for="name">PLAYER NAME</label><input id="name" maxlength="16" value="Player" autocomplete="off"></div>
+    <button class="primary" id="create">CREATE ROOM</button>
+    <div class="or">OR JOIN AN EXISTING ROOM</div>
+    <div><label for="code">ROOM CODE</label><input id="code" maxlength="6" placeholder="ABC123" autocomplete="off"></div>
+    <button id="join">JOIN ROOM</button>
+    <button class="ghost" id="solo">PLAY SOLO</button>
+    <p class="status" id="status" role="status">Solo mode is ready. Create or join a room after the multiplayer server has been deployed.</p>
+    <div class="rule"></div>
+    <h2>THE BASICS</h2>
+    <p class="help">Explore the shared world, jump between platforms and meet your friends. This is an early build: movement, platforms and room multiplayer come first.</p>
+  </aside>
+</main>
+<footer>lsdnetwork · early development build<br>Multiplayer requires the separate Cloudflare Worker. Solo mode works without it.</footer>
+</div>
+<script>
+(function(){
+"use strict";
+const canvas=document.getElementById("game"),ctx=canvas.getContext("2d");
+const statusEl=document.getElementById("status"),playersEl=document.getElementById("players"),roomEl=document.getElementById("room");
+const nameEl=document.getElementById("name"),codeEl=document.getElementById("code");
+const W=4200,H=540,GROUND=478,PLAYER_W=28,PLAYER_H=42;
+const platforms=[{x:360,y:390,w:170},{x:690,y:330,w:160},{x:1010,y:405,w:190},{x:1390,y:350,w:170},{x:1740,y:290,w:180},{x:2110,y:390,w:210},{x:2510,y:335,w:180},{x:2860,y:400,w:190},{x:3260,y:315,w:190},{x:3650,y:380,w:210}];
+const palette=["#ef7168","#62b8ee","#f2c65c","#aa91ef","#68ce9a"];
+const keys=new Set();let socket=null,localId=null,remote=[],camera=0,last=0,lastSend=0,lastJump=false,solo=true;
+const player={x:90,y:GROUND-PLAYER_H,vx:0,vy:0,onGround:true,name:"You",color:palette[0]};
+const GAME_SERVER_URL=""; // Set to your deployed Worker HTTPS URL, e.g. https://lsdnetwork-game.example.workers.dev
+function say(t){statusEl.textContent=t}
+function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.width*540/960*d);ctx.setTransform(canvas.width/960,0,0,canvas.height/540,0,0)}
+addEventListener("resize",resize);resize();
+function reset(){Object.assign(player,{x:90,y:GROUND-PLAYER_H,vx:0,vy:0,onGround:true,name:"You",color:palette[0]});camera=0;remote=[]}
+function disconnect(){if(socket){socket.close();socket=null}solo=true;localId=null;remote=[];roomEl.textContent="SOLO";playersEl.textContent="SOLO PREVIEW"}
+function connect(code){
+ if(!GAME_SERVER_URL){say("The game is ready, but the multiplayer Worker URL is not configured yet. Solo mode works now.");return}
+ disconnect();const base=new URL(GAME_SERVER_URL);base.protocol=base.protocol==="https:"?"wss:":"ws:";base.pathname="/room/"+encodeURIComponent(code);base.searchParams.set("name",(nameEl.value.trim()||"Player").slice(0,16));
+ say("Connecting to room "+code+"…");socket=new WebSocket(base.toString());
+ socket.addEventListener("open",()=>{solo=false;say("Connected! Share room code "+code+" with your friends.")});
+ socket.addEventListener("message",e=>{let data;try{data=JSON.parse(e.data)}catch(_){return}
+  if(data.type==="welcome"){localId=data.playerId;roomEl.textContent="ROOM "+code}
+  if(data.type==="state"){remote=data.players||[];playersEl.textContent=remote.length+"/5 PLAYERS";const me=remote.find(p=>p.id===localId);if(me)Object.assign(player,me)}
+  if(data.type==="error")say(data.message||"Room error")
+ });
+ socket.addEventListener("close",()=>{solo=true;localId=null;remote=[];playersEl.textContent="OFFLINE";say("Disconnected. You can reconnect or play solo.")});
+ socket.addEventListener("error",()=>say("Could not connect. Check that the game Worker is deployed and its URL is configured."));
+}
+document.getElementById("create").addEventListener("click",()=>{const code=Math.random().toString(36).slice(2,8).toUpperCase();codeEl.value=code;connect(code)});
+document.getElementById("join").addEventListener("click",()=>{const code=codeEl.value.trim().toUpperCase();if(!/^[A-Z0-9]{4,8}$/.test(code)){say("Enter a room code containing 4–8 letters or numbers.");return}connect(code)});
+document.getElementById("solo").addEventListener("click",()=>{disconnect();reset();say("Solo preview active. Move with A/D or arrow keys and jump with Space.")});
+addEventListener("keydown",e=>{if(e.target&&["INPUT","TEXTAREA"].includes(e.target.tagName))return;const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," "].includes(k))e.preventDefault();keys.add(k)});
+addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));addEventListener("blur",()=>keys.clear());
+function physics(dt){
+ const left=keys.has("a")||keys.has("arrowleft"),right=keys.has("d")||keys.has("arrowright"),jump=keys.has(" ")||keys.has("w")||keys.has("arrowup");
+ player.vx=((right?1:0)-(left?1:0))*220;if(jump&&!lastJump&&player.onGround){player.vy=-390;player.onGround=false}lastJump=jump;
+ const oldBottom=player.y+PLAYER_H;player.x=Math.max(0,Math.min(W-PLAYER_W,player.x+player.vx*dt));player.vy=Math.min(700,player.vy+1000*dt);player.y+=player.vy*dt;player.onGround=false;
+ if(player.y+PLAYER_H>=GROUND){player.y=GROUND-PLAYER_H;player.vy=0;player.onGround=true}
+ for(const p of platforms)if(player.vy>=0&&oldBottom<=p.y&&player.y+PLAYER_H>=p.y&&player.x+PLAYER_W>p.x&&player.x<p.x+p.w){player.y=p.y-PLAYER_H;player.vy=0;player.onGround=true}
+}
+function world(){
+ ctx.fillStyle="#91d7e9";ctx.fillRect(0,0,960,540);
+ for(let i=0;i<9;i++){let x=((i*240-camera*.22)%2100+2100)%2100-150;ctx.fillStyle=i%2?"#a8d9bd":"#9bcdbb";ctx.fillRect(x,330,190,150);ctx.fillRect(x+35,300,115,30)}
+ for(let i=0;i<7;i++){let x=((i*310-camera*.12)%1250+1250)%1250-100;ctx.fillStyle="#ffffffb8";ctx.fillRect(x,88+(i%3)*33,76,17);ctx.fillRect(x+17,70+(i%3)*33,44,18)}
+ ctx.fillStyle="#6caf56";ctx.fillRect(0,GROUND,960,62);ctx.fillStyle="#397b43";ctx.fillRect(0,GROUND+12,960,50);
+ for(let x=0;x<1000;x+=32){ctx.fillStyle="#8bd36a";ctx.fillRect(x,GROUND,22,7)}
+ for(const p of platforms){const x=Math.round(p.x-camera);if(x< -220||x>1000)continue;ctx.fillStyle="#805333";ctx.fillRect(x,p.y,p.w,18);ctx.fillStyle="#5b3c2b";ctx.fillRect(x,p.y+12,p.w,8);ctx.fillStyle="#8bd36a";ctx.fillRect(x,p.y,p.w,6);for(let n=8;n<p.w;n+=28){ctx.fillStyle="#9a6b40";ctx.fillRect(x+n,p.y+7,8,5)}}
+}
+function drawPlayer(p,isMe){
+ const x=Math.round(p.x-camera),y=Math.round(p.y);if(x< -60||x>1020)return;
+ ctx.fillStyle="#263238";ctx.fillRect(x+5,y+4,20,35);ctx.fillStyle=p.color||palette[0];ctx.fillRect(x+3,y+8,24,25);
+ ctx.fillStyle="#f3c79f";ctx.fillRect(x+6,y-2,18,15);ctx.fillStyle="#27313a";ctx.fillRect(x+5,y-5,20,7);ctx.fillRect(x+7,y+3,4,4);ctx.fillRect(x+19,y+3,4,4);ctx.fillStyle="#fff";ctx.fillRect(x+8,y+4,2,2);ctx.fillRect(x+20,y+4,2,2);ctx.fillStyle="#27313a";ctx.fillRect(x+7,y+32,7,10);ctx.fillRect(x+18,y+32,7,10);
+ ctx.fillStyle="#15202b";ctx.font="12px monospace";ctx.textAlign="center";ctx.fillText((isMe?"YOU":p.name||"PLAYER").slice(0,12),x+15,y-12)
+}
+function frame(t){const dt=Math.min((t-last)/1000||0,.033);last=t;if(solo)physics(dt);
+ if(!solo&&socket&&socket.readyState===WebSocket.OPEN&&t-lastSend>50){socket.send(JSON.stringify({type:"input",left:keys.has("a")||keys.has("arrowleft"),right:keys.has("d")||keys.has("arrowright"),jump:keys.has(" ")||keys.has("w")||keys.has("arrowup")}));lastSend=t}
+ const me=!solo?remote.find(p=>p.id===localId):player;if(me)camera=Math.max(0,Math.min(W-960,me.x-420));world();if(solo)drawPlayer(player,true);else remote.forEach(p=>drawPlayer(p,p.id===localId));requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
