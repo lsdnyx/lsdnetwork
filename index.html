@@ -1,72 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LSD Network | Hub</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0a0a0f;
-      color: #e2e8f0;
-      font-family: system-ui, -apple-system, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 2rem;
-    }
-    .container { max-width: 700px; width: 100%; text-align: center; }
-    h1 {
-      font-size: 2.8rem;
-      letter-spacing: -1px;
-      background: linear-gradient(90deg, #a855f7, #6366f1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-    }
-    p { color: #94a3b8; margin-bottom: 2.5rem; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    .card {
-      background: #13131f;
-      border: 1px solid #27273a;
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.2s ease;
-    }
-    .card:hover {
-      border-color: #a855f7;
-      transform: translateY(-3px);
-    }
-    .card h3 { color: #f8fafc; margin-bottom: 0.4rem; }
-    .card span { font-size: 0.85rem; color: #64748b; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project - Clean Media Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Phosphor Icons for clean SVG icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>LSD NETWORK</h1>
-    <p>System Online. Deploying apps, trackers, and interactive builds.</p>
-    <div class="grid">
-      <a href="#" class="card">
-        <h3>App Slot 01</h3>
-        <span>Pending Deployment</span>
-      </a>
-      <a href="#" class="card">
-        <h3>App Slot 02</h3>
-        <span>Pending Deployment</span>
-      </a>
-      <a href="#" class="card">
-        <h3>Game Slot 03</h3>
-        <span>Pending Deployment</span>
-      </a>
-    </div>
-  </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="nav-top">
+            <button class="logo-btn"><i class="ph ph-caret-double-right"></i></button>
+        </div>
+        
+        <div class="nav-links">
+            <button class="nav-item active" data-target="save">
+                <i class="ph ph-download-simple"></i>
+                <span>save</span>
+            </button>
+            <button class="nav-item" data-target="remux">
+                <i class="ph ph-arrows-left-right"></i>
+                <span>remux</span>
+            </button>
+            <!-- Spacer -->
+            <div style="flex-grow: 1;"></div>
+            
+            <button class="nav-item" data-target="settings">
+                <i class="ph ph-gear"></i>
+                <span>settings</span>
+            </button>
+            <button class="nav-item" data-target="donate">
+                <i class="ph ph-heart"></i>
+                <span>donate</span>
+            </button>
+            <button class="nav-item" data-target="updates">
+                <i class="ph ph-megaphone"></i>
+                <span>updates</span>
+            </button>
+            <button class="nav-item" data-target="about">
+                <i class="ph ph-info"></i>
+                <span>about</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="content">
+        
+        <!-- Top Right Action Button -->
+        <div class="top-action">
+            <button class="circle-btn"><i class="ph ph-arrow-down"></i></button>
+        </div>
+
+        <!-- SAVE PAGE -->
+        <section id="page-save" class="page active">
+            <div class="save-container">
+                <div class="hero-graphic">
+                    <!-- Placeholder for your mascot/logo -->
+                    <div class="mascot-placeholder">
+                        <i class="ph ph-cat" style="font-size: 100px;"></i>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-box">
+                        <i class="ph ph-link"></i>
+                        <input type="text" placeholder="paste the link here">
+                    </div>
+                    <div class="input-options">
+                        <div class="option-group">
+                            <button class="opt-btn active"><i class="ph ph-sparkle"></i> auto</button>
+                            <button class="opt-btn"><i class="ph ph-music-notes"></i> audio</button>
+                            <button class="opt-btn"><i class="ph ph-speaker-slash"></i> mute</button>
+                        </div>
+                        <button class="opt-btn"><i class="ph ph-clipboard"></i> paste</button>
+                    </div>
+                </div>
+                
+                <p class="terms-text">by continuing, you agree to <a href="#">terms and ethics of use</a></p>
+            </div>
+        </section>
+
+        <!-- ABOUT PAGE -->
+        <section id="page-about" class="page">
+            <div class="page-header">
+                <h2>about</h2>
+            </div>
+            <div class="about-layout">
+                <div class="about-sidebar">
+                    <button class="side-tab active">what's this?</button>
+                    <button class="side-tab">community & support</button>
+                    <button class="side-tab">privacy policy</button>
+                    <button class="side-tab">terms and ethics</button>
+                    <button class="side-tab">thanks & licenses</button>
+                </div>
+                <div class="about-content">
+                    <h3>best way to save what you love <i class="ph ph-arrow-up-right"></i></h3>
+                    <p>This tool helps you save anything from your favorite websites: video, audio, photos or gifs. just paste the link and you're ready to rock!</p>
+                    <p>no ads, trackers, paywalls, or other nonsense. just a convenient web app that works anywhere, whenever you need it.</p>
+                    
+                    <br>
+                    <h3>motivation <i class="ph ph-arrow-up-right"></i></h3>
+                    <p>This project was created for public benefit, to protect people from ads and malware pushed by alternative downloaders. we believe that the best software is safe, open, and accessible.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS PAGE -->
+        <section id="page-settings" class="page">
+            <div class="page-header">
+                <span class="version">v1.0.0</span>
+                <h2>settings</h2>
+            </div>
+            
+            <div class="settings-layout">
+                <!-- Settings Sidebar -->
+                <div class="settings-nav">
+                    <button class="set-tab active" data-set="appearance"><i class="ph ph-sun"></i> appearance</button>
+                    <button class="set-tab" data-set="accessibility"><i class="ph ph-wheelchair"></i> accessibility</button>
+                    <button class="set-tab" data-set="video"><i class="ph ph-film-strip"></i> video</button>
+                    <button class="set-tab" data-set="audio"><i class="ph ph-music-note"></i> audio</button>
+                    <button class="set-tab" data-set="metadata"><i class="ph ph-file-text"></i> metadata</button>
+                </div>
+
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    
+                    <!-- Appearance Sub-page -->
+                    <div class="set-panel active" id="set-appearance">
+                        <div class="setting-group">
+                            <label>theme <i class="ph ph-arrow-up-right"></i></label>
+                            <div class="segmented-control">
+                                <button class="active">auto</button>
+                                <button>light</button>
+                                <button>dark</button>
+                            </div>
+                            <p class="desc">auto theme switches between light and dark themes depending on your device's display mode.</p>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label>language <i class="ph ph-arrow-up-right"></i></label>
+                            <div class="toggle-row">
+                                <span>automatic selection</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="dropdown">
+                                <span>preferred language</span>
+                                <span>english <i class="ph ph-caret-down"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Sub-page -->
+                    <div class="set-panel" id="set-video">
+                        <div class="setting-group">
+                            <label>video quality <i class="ph ph-arrow-up-right"></i></label>
+                            <div class="segmented-control wrap">
+                                <button>8k+</button>
+                                <button>4k</button>
+                                <button class="active">1080p</button>
+                                <button>720p</button>
+                                <button>480p</button>
+                            </div>
+                            <p class="desc">if preferred video quality isn't available, next best is picked instead.</p>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label>youtube file container <i class="ph ph-arrow-up-right"></i></label>
+                            <div class="segmented-control">
+                                <button class="active">auto</button>
+                                <button>mp4</button>
+                                <button>webm</button>
+                                <button>mkv</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio Sub-page -->
+                    <div class="set-panel" id="set-audio">
+                        <div class="setting-group">
+                            <label>audio bitrate <i class="ph ph-arrow-up-right"></i></label>
+                            <div class="segmented-control wrap">
+                                <button>320kb/s</button>
+                                <button>256kb/s</button>
+                                <button class="active">128kb/s</button>
+                                <button>96kb/s</button>
+                                <button>64kb/s</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
