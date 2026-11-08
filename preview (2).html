@@ -1,0 +1,473 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome | My Website</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #050020;
+    color: white;
+}
+
+/* Stars */
+.stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.stars span {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite alternate;
+}
+
+/* Pages */
+.page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    z-index: 2;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.92) translateY(20px);
+
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s ease,
+        visibility 0.7s;
+}
+
+.page.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+}
+
+.content {
+    width: 100%;
+    max-width: 700px;
+}
+
+.star {
+    font-size: 65px;
+    color: white;
+    text-shadow: 0 0 20px #9b4dff, 0 0 50px #8b35ff;
+    animation: glow 2s infinite alternate;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: clamp(50px, 10vw, 100px);
+    font-weight: 900;
+    background: linear-gradient(90deg, #a66aff, #fff, #e7a4ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 20px;
+}
+
+p {
+    color: #c5b4f5;
+    font-size: clamp(17px, 3vw, 25px);
+    margin-bottom: 35px;
+}
+
+/* Buttons */
+button {
+    padding: 19px 55px;
+    border: 2px solid #c15aff;
+    border-radius: 60px;
+    background: linear-gradient(100deg, #6724ff, #d52cff);
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 25px #a42cff;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 0 45px #c12cff;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* Battery display */
+.battery-card {
+    margin: 25px auto;
+    padding: 25px;
+    max-width: 320px;
+    border: 1px solid #9b55ff;
+    border-radius: 22px;
+    background: rgba(110, 35, 200, 0.15);
+    box-shadow: 0 0 25px rgba(160, 50, 255, 0.2);
+    animation: appear 0.7s ease;
+}
+
+.battery-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.battery-number {
+    font-size: 48px;
+    font-weight: bold;
+    color: #e4baff;
+}
+
+.battery-status {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #c5b4f5;
+}
+
+.battery-note {
+    font-size: 12px;
+    color: #9282bb;
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+/* Three buttons */
+.button-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.button-group button {
+    min-width: 160px;
+    padding: 18px 30px;
+}
+
+.back {
+    display: block;
+    margin: 35px auto 0;
+    padding: 12px 25px;
+    background: transparent;
+    border: 1px solid #8e54ff;
+    box-shadow: none;
+    font-size: 15px;
+}
+
+#message {
+    margin-top: 25px;
+    margin-bottom: 0;
+    font-size: 17px;
+    color: #e6caff;
+    min-height: 25px;
+}
+
+/* Waves */
+.waves {
+    position: fixed;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.wave {
+    position: absolute;
+    width: 120%;
+    height: 100%;
+    left: -10%;
+    bottom: 0;
+}
+
+.wave1 {
+    background: linear-gradient(120deg, #29108c, #7c16dc);
+    clip-path: polygon(0 20%, 15% 40%, 30% 35%, 50% 90%, 70% 45%, 85% 35%, 100% 10%, 100% 100%, 0 100%);
+}
+
+.wave2 {
+    background: linear-gradient(120deg, #8e20c9, #ec36bd);
+    opacity: 0.8;
+    clip-path: polygon(0 50%, 15% 90%, 35% 65%, 55% 90%, 75% 45%, 100% 70%, 100% 100%, 0 100%);
+    animation: waveMove 8s ease-in-out infinite alternate;
+}
+
+/* Animations */
+@keyframes twinkle {
+    from { opacity: 0.2; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1.5); }
+}
+
+@keyframes glow {
+    from { opacity: 0.7; }
+    to { opacity: 1; }
+}
+
+@keyframes waveMove {
+    from { transform: translateX(-3%); }
+    to { transform: translateX(3%); }
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile */
+@media(max-width: 600px) {
+    .waves { height: 22%; }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-group button {
+        width: 220px;
+    }
+
+    .star { font-size: 50px; }
+}
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- PAGE 1 -->
+<section class="page active" id="page1">
+    <div class="content">
+
+        <div class="star">✦</div>
+
+        <h1>Welcome!</h1>
+
+        <p>Thanks for visiting this website!</p>
+
+        <button id="startButton" onclick="getBatteryAndContinue()">
+            Let's Begin →
+        </button>
+
+        <div id="batteryResult"></div>
+
+    </div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="page" id="page2">
+    <div class="content">
+
+        <div class="star">✧</div>
+
+        <h1>Explore.</h1>
+
+        <p>Choose where you want to go next.</p>
+
+        <div class="button-group">
+
+            <button onclick="showMessage('Welcome to Explore!')">
+                Explore
+            </button>
+
+            <button onclick="showMessage('Welcome to About!')">
+                About
+            </button>
+
+            <button onclick="showMessage('Welcome to Contact!')">
+                Contact
+            </button>
+
+        </div>
+
+        <p id="message"></p>
+
+        <button class="back" onclick="previousPage()">
+            ← Back
+        </button>
+
+    </div>
+</section>
+
+<!-- Waves -->
+<div class="waves">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+</div>
+
+<script>
+
+// Generate background stars
+const stars = document.getElementById("stars");
+
+for (let i = 0; i < 100; i++) {
+    const star = document.createElement("span");
+
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.animationDelay = Math.random() * 3 + "s";
+
+    stars.appendChild(star);
+}
+
+
+// Battery information
+async function getBatteryAndContinue() {
+
+    const button = document.getElementById("startButton");
+    const result = document.getElementById("batteryResult");
+
+    button.disabled = true;
+    button.textContent = "Checking battery...";
+
+    let batteryHTML = "";
+
+    try {
+
+        if (navigator.getBattery) {
+
+            const battery = await navigator.getBattery();
+
+            const percentage = Math.round(battery.level * 100);
+
+            const charging = battery.charging;
+
+            let icon = "🔋";
+
+            if (percentage <= 20) {
+                icon = "🪫";
+            }
+
+            batteryHTML = `
+                <div class="battery-card">
+                    <div class="battery-icon">${icon}</div>
+
+                    <div class="battery-number">
+                        ${percentage}%
+                    </div>
+
+                    <div class="battery-status">
+                        ${charging ? "⚡ Device is charging" : "Device is not charging"}
+                    </div>
+
+                    <p class="battery-note">
+                        Your battery information is displayed locally.
+                    </p>
+                </div>
+            `;
+
+        } else {
+
+            batteryHTML = `
+                <div class="battery-card">
+                    <div class="battery-icon">🔋</div>
+                    <div class="battery-status">
+                        Battery information is not supported by this browser.
+                    </div>
+                </div>
+            `;
+
+        }
+
+    } catch (error) {
+
+        batteryHTML = `
+            <div class="battery-card">
+                <div class="battery-icon">🔋</div>
+                <div class="battery-status">
+                    Unable to access battery information.
+                </div>
+            </div>
+        `;
+
+    }
+
+    result.innerHTML = batteryHTML;
+
+    button.textContent = "Continue →";
+    button.disabled = false;
+
+    // Change button action after battery check
+    button.onclick = nextPage;
+
+}
+
+
+// Page transition
+function nextPage() {
+
+    document.getElementById("page1")
+        .classList.remove("active");
+
+    setTimeout(() => {
+        document.getElementById("page2")
+            .classList.add("active");
+    }, 150);
+
+}
+
+
+// Go back
+function previousPage() {
+
+    document.getElementById("page2")
+        .classList.remove("active");
+
+    document.getElementById("message")
+        .textContent = "";
+
+    setTimeout(() => {
+        document.getElementById("page1")
+            .classList.add("active");
+    }, 150);
+
+}
+
+
+// Three button actions
+function showMessage(message) {
+
+    document.getElementById("message")
+        .textContent = "✨ " + message;
+
+}
+
+</script>
+
+</body>
+</html>
