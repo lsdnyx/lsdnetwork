@@ -1,5 +1,5 @@
-name = "lsdnetwork-game"
-main = "worker.js"
+name = "lsdnetwork-diwali"
+main = "server/worker.js"
 compatibility_date = "2026-11-08"
 
 [[durable_objects.bindings]]

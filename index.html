@@ -1,135 +1,104 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#11151b">
-<title>Pixel World | lsdnetwork</title>
-<style>
-:root{color-scheme:dark;--bg:#101319;--panel:#1a2029;--line:#303a48;--muted:#91a0b2;--white:#f4f6f8;--green:#9be27d}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#202b36 0,#101319 55%);color:var(--white);font-family:ui-monospace,Consolas,monospace}
-button,input{font:inherit}
-.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:28px 0 40px}
-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
-.brand{display:flex;align-items:center;gap:12px}.mark{width:38px;height:38px;background:var(--green);color:#172016;display:grid;place-items:center;font-weight:900;font-size:21px;box-shadow:4px 4px 0 #527c45}
-h1{font-size:17px;letter-spacing:.08em;margin:0}.sub{color:var(--muted);font-size:11px;margin-top:5px}
-.online{font-size:11px;color:var(--green);border:1px solid #3e6240;padding:8px 10px;border-radius:5px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;align-items:start}
-.game{min-width:0}.screen{position:relative;border:1px solid var(--line);background:#91d7e9;overflow:hidden;box-shadow:0 18px 50px #0006}
-canvas{display:block;width:100%;height:auto;image-rendering:pixelated}
-.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
-.hud span{background:#101820dd;border:1px solid #ffffff35;color:white;padding:7px 9px;border-radius:3px;font-size:10px}
-.hint{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:12px 2px}
-kbd{color:#fff;background:#252e39;border:1px solid #455263;border-radius:3px;padding:4px 6px;font:inherit}
-.panel{background:var(--panel);border:1px solid var(--line);padding:17px;border-radius:5px}
-.panel h2{font-size:13px;margin:0 0 17px;letter-spacing:.05em}
-label{display:block;color:var(--muted);font-size:10px;margin:13px 0 7px}
-input{width:100%;padding:11px 10px;border:1px solid var(--line);background:#10151b;color:white;border-radius:3px;outline:none;user-select:text}
-input:focus{border-color:#9be27d}
-button{width:100%;border:1px solid #435064;background:#283342;color:white;padding:11px 9px;margin-top:9px;border-radius:3px;cursor:pointer;font-size:11px}
-button:hover{filter:brightness(1.18)}button.primary{background:var(--green);color:#152014;border-color:var(--green);font-weight:900}
-button.ghost{background:transparent;color:var(--muted)}
-.or{font-size:10px;color:var(--muted);text-align:center;margin:17px 0 4px}
-.status{font-size:10px;line-height:1.65;color:#c0ccd7;min-height:48px;margin:14px 0 0;overflow-wrap:anywhere}
-.rule{height:1px;background:var(--line);margin:15px 0}
-.help{font-size:10px;line-height:1.7;color:var(--muted);margin:0}
-footer{color:#637184;font-size:10px;margin-top:22px;line-height:1.7}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.panel{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.panel h2,.status,.rule,.help,.or{grid-column:1/-1}.panel button{align-self:end}.status{min-height:0}}
-@media(max-width:560px){.shell{width:calc(100% - 20px);padding-top:18px}.panel{display:block}.online{font-size:9px}.hint{font-size:9px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101722">
+  <meta name="description" content="Explore a colourful Diwali town with your friends in this free browser game.">
+  <title>Diwali Town | lsdnetwork</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/game.css">
 </head>
 <body>
-<div class="shell">
-<header>
-  <div class="brand"><div class="mark">P</div><div><h1>PIXEL WORLD</h1><div class="sub">a tiny multiplayer platformer</div></div></div>
-  <div class="online">● ROOM CAPACITY: 5</div>
-</header>
-<main class="layout">
-  <section class="game">
-    <div class="screen">
-      <canvas id="game" width="960" height="540" aria-label="Pixel World platform game"></canvas>
-      <div class="hud"><span id="players">SOLO PREVIEW</span><span id="room">NO ROOM</span></div>
-    </div>
-    <div class="hint">MOVE <kbd>A</kbd><kbd>D</kbd> OR <kbd>←</kbd><kbd>→</kbd><span>JUMP</span><kbd>SPACE</kbd><kbd>W</kbd><kbd>↑</kbd></div>
-  </section>
-  <aside class="panel">
-    <h2>PLAY WITH FRIENDS</h2>
-    <div><label for="name">PLAYER NAME</label><input id="name" maxlength="16" value="Player" autocomplete="off"></div>
-    <button class="primary" id="create">CREATE ROOM</button>
-    <div class="or">OR JOIN AN EXISTING ROOM</div>
-    <div><label for="code">ROOM CODE</label><input id="code" maxlength="6" placeholder="ABC123" autocomplete="off"></div>
-    <button id="join">JOIN ROOM</button>
-    <button class="ghost" id="solo">PLAY SOLO</button>
-    <p class="status" id="status" role="status">Solo mode is ready. Create or join a room after the multiplayer server has been deployed.</p>
-    <div class="rule"></div>
-    <h2>THE BASICS</h2>
-    <p class="help">Explore the shared world, jump between platforms and meet your friends. This is an early build: movement, platforms and room multiplayer come first.</p>
-  </aside>
-</main>
-<footer>lsdnetwork · early development build<br>Multiplayer requires the separate Cloudflare Worker. Solo mode works without it.</footer>
-</div>
-<script>
-(function(){
-"use strict";
-const canvas=document.getElementById("game"),ctx=canvas.getContext("2d");
-const statusEl=document.getElementById("status"),playersEl=document.getElementById("players"),roomEl=document.getElementById("room");
-const nameEl=document.getElementById("name"),codeEl=document.getElementById("code");
-const W=4200,H=540,GROUND=478,PLAYER_W=28,PLAYER_H=42;
-const platforms=[{x:360,y:390,w:170},{x:690,y:330,w:160},{x:1010,y:405,w:190},{x:1390,y:350,w:170},{x:1740,y:290,w:180},{x:2110,y:390,w:210},{x:2510,y:335,w:180},{x:2860,y:400,w:190},{x:3260,y:315,w:190},{x:3650,y:380,w:210}];
-const palette=["#ef7168","#62b8ee","#f2c65c","#aa91ef","#68ce9a"];
-const keys=new Set();let socket=null,localId=null,remote=[],camera=0,last=0,lastSend=0,lastJump=false,solo=true;
-const player={x:90,y:GROUND-PLAYER_H,vx:0,vy:0,onGround:true,name:"You",color:palette[0]};
-const GAME_SERVER_URL=""; // Set to your deployed Worker HTTPS URL, e.g. https://lsdnetwork-game.example.workers.dev
-function say(t){statusEl.textContent=t}
-function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.width*540/960*d);ctx.setTransform(canvas.width/960,0,0,canvas.height/540,0,0)}
-addEventListener("resize",resize);resize();
-function reset(){Object.assign(player,{x:90,y:GROUND-PLAYER_H,vx:0,vy:0,onGround:true,name:"You",color:palette[0]});camera=0;remote=[]}
-function disconnect(){if(socket){socket.close();socket=null}solo=true;localId=null;remote=[];roomEl.textContent="SOLO";playersEl.textContent="SOLO PREVIEW"}
-function connect(code){
- if(!GAME_SERVER_URL){say("The game is ready, but the multiplayer Worker URL is not configured yet. Solo mode works now.");return}
- disconnect();const base=new URL(GAME_SERVER_URL);base.protocol=base.protocol==="https:"?"wss:":"ws:";base.pathname="/room/"+encodeURIComponent(code);base.searchParams.set("name",(nameEl.value.trim()||"Player").slice(0,16));
- say("Connecting to room "+code+"…");socket=new WebSocket(base.toString());
- socket.addEventListener("open",()=>{solo=false;say("Connected! Share room code "+code+" with your friends.")});
- socket.addEventListener("message",e=>{let data;try{data=JSON.parse(e.data)}catch(_){return}
-  if(data.type==="welcome"){localId=data.playerId;roomEl.textContent="ROOM "+code}
-  if(data.type==="state"){remote=data.players||[];playersEl.textContent=remote.length+"/5 PLAYERS";const me=remote.find(p=>p.id===localId);if(me)Object.assign(player,me)}
-  if(data.type==="error")say(data.message||"Room error")
- });
- socket.addEventListener("close",()=>{solo=true;localId=null;remote=[];playersEl.textContent="OFFLINE";say("Disconnected. You can reconnect or play solo.")});
- socket.addEventListener("error",()=>say("Could not connect. Check that the game Worker is deployed and its URL is configured."));
-}
-document.getElementById("create").addEventListener("click",()=>{const code=Math.random().toString(36).slice(2,8).toUpperCase();codeEl.value=code;connect(code)});
-document.getElementById("join").addEventListener("click",()=>{const code=codeEl.value.trim().toUpperCase();if(!/^[A-Z0-9]{4,8}$/.test(code)){say("Enter a room code containing 4–8 letters or numbers.");return}connect(code)});
-document.getElementById("solo").addEventListener("click",()=>{disconnect();reset();say("Solo preview active. Move with A/D or arrow keys and jump with Space.")});
-addEventListener("keydown",e=>{if(e.target&&["INPUT","TEXTAREA"].includes(e.target.tagName))return;const k=e.key.toLowerCase();if(["arrowleft","arrowright","arrowup"," "].includes(k))e.preventDefault();keys.add(k)});
-addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));addEventListener("blur",()=>keys.clear());
-function physics(dt){
- const left=keys.has("a")||keys.has("arrowleft"),right=keys.has("d")||keys.has("arrowright"),jump=keys.has(" ")||keys.has("w")||keys.has("arrowup");
- player.vx=((right?1:0)-(left?1:0))*220;if(jump&&!lastJump&&player.onGround){player.vy=-390;player.onGround=false}lastJump=jump;
- const oldBottom=player.y+PLAYER_H;player.x=Math.max(0,Math.min(W-PLAYER_W,player.x+player.vx*dt));player.vy=Math.min(700,player.vy+1000*dt);player.y+=player.vy*dt;player.onGround=false;
- if(player.y+PLAYER_H>=GROUND){player.y=GROUND-PLAYER_H;player.vy=0;player.onGround=true}
- for(const p of platforms)if(player.vy>=0&&oldBottom<=p.y&&player.y+PLAYER_H>=p.y&&player.x+PLAYER_W>p.x&&player.x<p.x+p.w){player.y=p.y-PLAYER_H;player.vy=0;player.onGround=true}
-}
-function world(){
- ctx.fillStyle="#91d7e9";ctx.fillRect(0,0,960,540);
- for(let i=0;i<9;i++){let x=((i*240-camera*.22)%2100+2100)%2100-150;ctx.fillStyle=i%2?"#a8d9bd":"#9bcdbb";ctx.fillRect(x,330,190,150);ctx.fillRect(x+35,300,115,30)}
- for(let i=0;i<7;i++){let x=((i*310-camera*.12)%1250+1250)%1250-100;ctx.fillStyle="#ffffffb8";ctx.fillRect(x,88+(i%3)*33,76,17);ctx.fillRect(x+17,70+(i%3)*33,44,18)}
- ctx.fillStyle="#6caf56";ctx.fillRect(0,GROUND,960,62);ctx.fillStyle="#397b43";ctx.fillRect(0,GROUND+12,960,50);
- for(let x=0;x<1000;x+=32){ctx.fillStyle="#8bd36a";ctx.fillRect(x,GROUND,22,7)}
- for(const p of platforms){const x=Math.round(p.x-camera);if(x< -220||x>1000)continue;ctx.fillStyle="#805333";ctx.fillRect(x,p.y,p.w,18);ctx.fillStyle="#5b3c2b";ctx.fillRect(x,p.y+12,p.w,8);ctx.fillStyle="#8bd36a";ctx.fillRect(x,p.y,p.w,6);for(let n=8;n<p.w;n+=28){ctx.fillStyle="#9a6b40";ctx.fillRect(x+n,p.y+7,8,5)}}
-}
-function drawPlayer(p,isMe){
- const x=Math.round(p.x-camera),y=Math.round(p.y);if(x< -60||x>1020)return;
- ctx.fillStyle="#263238";ctx.fillRect(x+5,y+4,20,35);ctx.fillStyle=p.color||palette[0];ctx.fillRect(x+3,y+8,24,25);
- ctx.fillStyle="#f3c79f";ctx.fillRect(x+6,y-2,18,15);ctx.fillStyle="#27313a";ctx.fillRect(x+5,y-5,20,7);ctx.fillRect(x+7,y+3,4,4);ctx.fillRect(x+19,y+3,4,4);ctx.fillStyle="#fff";ctx.fillRect(x+8,y+4,2,2);ctx.fillRect(x+20,y+4,2,2);ctx.fillStyle="#27313a";ctx.fillRect(x+7,y+32,7,10);ctx.fillRect(x+18,y+32,7,10);
- ctx.fillStyle="#15202b";ctx.font="12px monospace";ctx.textAlign="center";ctx.fillText((isMe?"YOU":p.name||"PLAYER").slice(0,12),x+15,y-12)
-}
-function frame(t){const dt=Math.min((t-last)/1000||0,.033);last=t;if(solo)physics(dt);
- if(!solo&&socket&&socket.readyState===WebSocket.OPEN&&t-lastSend>50){socket.send(JSON.stringify({type:"input",left:keys.has("a")||keys.has("arrowleft"),right:keys.has("d")||keys.has("arrowright"),jump:keys.has(" ")||keys.has("w")||keys.has("arrowup")}));lastSend=t}
- const me=!solo?remote.find(p=>p.id===localId):player;if(me)camera=Math.max(0,Math.min(W-960,me.x-420));world();if(solo)drawPlayer(player,true);else remote.forEach(p=>drawPlayer(p,p.id===localId));requestAnimationFrame(frame)}
-requestAnimationFrame(frame);
-})();
-</script>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Diwali Town home">
+        <span class="brand-mark">✦</span>
+        <span><strong>DIWALI TOWN</strong><small>THE FESTIVAL IS BETTER TOGETHER</small></span>
+      </a>
+      <div class="topbar-right">
+        <div class="online-chip"><i></i><span id="connection-label">SOLO WORLD</span></div>
+        <button class="icon-button" id="sound-toggle" aria-label="Toggle sound" title="Toggle sound">♫</button>
+        <button class="icon-button" id="help-button" aria-label="How to play" title="How to play">?</button>
+      </div>
+    </header>
+
+    <section class="game-layout">
+      <div class="game-column">
+        <div class="game-frame">
+          <canvas id="world" width="960" height="600" aria-label="Diwali Town game world"></canvas>
+          <div class="world-vignette"></div>
+          <div class="world-top-hud">
+            <div class="location-pill"><span class="location-dot"></span><span id="location-name">THE OLD MARKET</span></div>
+            <div class="time-pill">✦ DIWALI NIGHT <span id="clock">8:00 PM</span></div>
+          </div>
+          <div class="toast" id="toast" aria-live="polite"></div>
+          <div class="interaction-hint" id="interaction-hint">Press E to interact</div>
+          <div class="mobile-controls" id="mobile-controls">
+            <div class="joystick-zone" id="joystick-zone" aria-label="Movement joystick">
+              <div class="joystick-base"><div class="joystick-knob" id="joystick-knob"></div></div>
+            </div>
+            <div class="mobile-action-stack">
+              <button class="mobile-action secondary" id="mobile-bag" aria-label="Open bag">▣</button>
+              <button class="mobile-action primary" id="mobile-interact" aria-label="Interact">E</button>
+            </div>
+          </div>
+          <div class="loading-cover" id="loading-cover"><div class="loading-lamp">✦</div><strong>WAKING UP THE TOWN</strong><span>Setting out the diyas…</span></div>
+        </div>
+        <div class="game-footer">
+          <span><kbd>WASD</kbd> <kbd>↑↓←→</kbd> MOVE</span>
+          <span><kbd>E</kbd> INTERACT</span>
+          <span><kbd>I</kbd> BAG</span>
+          <span class="footer-note">Works on desktop & touch screens</span>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <section class="profile-card">
+          <div class="avatar" id="avatar">R</div>
+          <div class="profile-info"><span class="eyebrow">YOUR FESTIVAL ID</span><strong id="player-name-label">Guest</strong><small id="room-label">Exploring alone</small></div>
+          <button class="tiny-button" id="change-name" title="Change name">✎</button>
+        </section>
+
+        <section class="wallet-card">
+          <div><span class="eyebrow">YOUR WALLET</span><div class="coin-value"><span class="coin-icon">◉</span><strong id="coin-count">100</strong><small>coins</small></div></div>
+          <div class="wallet-sparkle">✧</div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-heading"><h2>YOUR LITTLE BAG</h2><button class="text-button" id="open-bag">VIEW ALL</button></div>
+          <div class="inventory-preview" id="inventory-preview"></div>
+        </section>
+
+        <section class="panel-section quest-section">
+          <div class="section-heading"><h2>TONIGHT'S QUEST</h2><span class="quest-star">✦</span></div>
+          <div class="quest-card"><div class="quest-icon">🏮</div><div class="quest-copy"><strong>Market wanderer</strong><p>Visit the sweet shop and meet the shopkeeper.</p><div class="quest-progress"><span id="quest-progress"></span></div><small id="quest-progress-label">0 / 2 completed</small></div></div>
+        </section>
+
+        <section class="panel-section friends-section">
+          <div class="section-heading"><h2>YOUR TOWN</h2><span class="player-count" id="player-count">1 / 5</span></div>
+          <div class="friend-list" id="friend-list"><div class="friend-row"><span class="friend-dot you"></span><span>You</span><small>here now</small></div></div>
+          <div class="room-actions"><button class="button button-primary" id="create-room">CREATE FRIEND ROOM</button><div class="join-row"><input id="room-code" maxlength="8" placeholder="ROOM CODE" aria-label="Room code"><button class="button button-outline" id="join-room">JOIN</button></div></div>
+        </section>
+
+        <div class="side-tip"><span>✧</span> A little kindness makes every festival brighter.</div>
+      </aside>
+    </section>
+    <footer class="site-footer">A tiny world made for big celebrations <span>✦</span> lsdnetwork</footer>
+  </main>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+      <div class="modal-kicker" id="modal-kicker">DIWALI TOWN</div>
+      <h2 id="modal-title">Welcome!</h2>
+      <div class="modal-content" id="modal-content"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </section>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
 </body>
 </html>
