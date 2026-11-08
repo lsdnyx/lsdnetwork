@@ -11,16 +11,9 @@ class DiwaliGame{
     this.player=new Player({name:localStorage.getItem("diwali-name")||"Guest"});this.camera={x:0,y:0};this.network=new Network(this);this.ui=new UI(this);
     this.coins=Number(localStorage.getItem("diwali-coins")||100);this.inventory=JSON.parse(localStorage.getItem("diwali-inventory")||"{}");this.quest=JSON.parse(localStorage.getItem("diwali-quest")||'{"shop":false,"talk":false}');
     this.otherPlayers=new Map();this.nearby=null;this.soundOn=false;this.audio=null;this.last=0;this.time=0;this.toastShown=false;
-    this.bind();this.ui.refresh();this.resize();addEventListener("resize",()=>this.resize());requestAnimationFrame(t=>this.frame(t));
+    this.ui.refresh();this.resize();addEventListener("resize",()=>this.resize());requestAnimationFrame(t=>this.frame(t));
     setTimeout(()=>document.getElementById("loading-cover").classList.add("done"),550);
     this.ui.toast("Welcome! Wander over to the market and say hello.");
-  }
-  bind(){
-    document.getElementById("create-room").addEventListener("click",()=>this.createRoom());
-    document.getElementById("join-room").addEventListener("click",()=>this.joinRoom(document.getElementById("room-code").value));
-    document.getElementById("mobile-interact").addEventListener("click",()=>this.interact());
-    document.getElementById("mobile-bag").addEventListener("click",()=>this.ui.openBag());
-    document.getElementById("open-bag").addEventListener("click",()=>this.ui.openBag());
   }
   resize(){const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;this.canvas.width=Math.round(r.width*d);this.canvas.height=Math.round(r.width*600/960*d);this.ctx.setTransform(this.canvas.width/960,0,0,this.canvas.height/600,0,0)}
   save(){localStorage.setItem("diwali-name",this.player.name);localStorage.setItem("diwali-coins",String(this.coins));localStorage.setItem("diwali-inventory",JSON.stringify(this.inventory));localStorage.setItem("diwali-quest",JSON.stringify(this.quest))}
