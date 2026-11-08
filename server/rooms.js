@@ -1,5 +1,5 @@
-const MAX_PLAYERS=5,WIDTH=2400,HEIGHT=1680,SPEED=190,W=26,H=34;
-const COLORS=["#f18b64","#72bde4","#e9c56c","#ad98e8","#7bc99c"];
+const MAX_PLAYERS=50,WIDTH=2400,HEIGHT=1680,SPEED=190,W=26,H=34;
+const COLORS=["#f18b64","#72bde4","#e9c56c","#ad98e8","#7bc99c","#e89ac1","#85c7b5","#d9a2ed"];
 const BLOCKERS=[
   {x:352,y:225,w:196,h:122},{x:852,y:225,w:196,h:122},{x:1422,y:360,w:166,h:92},{x:992,y:1020,w:276,h:158},
   {x:620,y:638,w:105,h:62},{x:830,y:638,w:105,h:62},{x:1290,y:668,w:105,h:62},
@@ -9,10 +9,11 @@ function blocked(x,y){if(x<0||y<0||x+W>WIDTH||y+H>HEIGHT)return true;return BLOC
 export class GameRoom{
   constructor(state){this.state=state}
   async fetch(request){
-    const sockets=this.state.getWebSockets();if(sockets.length>=MAX_PLAYERS)return new Response("Room is full (5 players maximum).",{status:409});
+    const sockets=this.state.getWebSockets();if(sockets.length>=MAX_PLAYERS)return new Response("The public world is full. Try again shortly.",{status:409});
     const url=new URL(request.url),raw=url.searchParams.get("name")||"Guest",name=raw.replace(/[^a-zA-Z0-9 _-]/g,"").trim().slice(0,16)||"Guest";
     const pair=new WebSocketPair(),client=pair[0],server=pair[1],id=crypto.randomUUID();
-    const p={id,name,color:COLORS[sockets.length%COLORS.length],x:1160+sockets.length*38,y:640,vx:0,vy:0,input:{x:0,y:0}};
+    const index=sockets.length,spawnX=1100+(index%10)*34,spawnY=600+Math.floor(index/10)*42;
+    const p={id,name,color:COLORS[index%COLORS.length],x:spawnX,y:spawnY,input:{x:0,y:0}};
     server.serializeAttachment(p);this.state.acceptWebSocket(server);server.send(JSON.stringify({type:"welcome",playerId:id}));
     this.broadcast();if(await this.state.storage.getAlarm()===null)await this.state.storage.setAlarm(Date.now()+50);
     return new Response(null,{status:101,webSocket:client});
