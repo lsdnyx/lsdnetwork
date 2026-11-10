@@ -1,926 +1,1652 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NOVA · digital space</title>
-  <style>
-    /* ------ GLOBAL RESET & PALETTE ------ */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07050f">
+<title>NOVA · Digital Space</title>
+<meta name="description" content="A calm, focused learning space for Physics, Chemistry, Zoology, Botany and more.">
+<link rel="manifest" href='data:application/manifest+json,{"name":"NOVA","short_name":"NOVA","start_url":".","display":"standalone","background_color":"%2307050f","theme_color":"%23b77aff","icons":[{"src":"data:image/svg%2Bxml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect fill=%27%2307050f%27 width=%27100%27 height=%27100%27 rx=%2720%27/%3E%3Ctext x=%2750%27 y=%2768%27 font-size=%2748%27 font-family=%27monospace%27 fill=%27%23b77aff%27 text-anchor=%27middle%27 font-weight=%27bold%27%3EN%3C/text%3E%3C/svg%3E","sizes":"100x100","type":"image/svg+xml"}]}'>
+<style>
+/* ============================================================
+   CSS — ALL STYLES
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
 
-    :root {
-      --bg-deep: #07050f;
-      --bg-surface: #0f0b17;
-      --panel-glass: rgba(22, 16, 35, 0.92);
-      --panel-border: rgba(180, 130, 255, 0.18);
-      --text-primary: #f2eefb;
-      --text-dim: #b3a6cf;
-      --accent-violet: #b77aff;
-      --accent-pink: #f07ec2;
-      --accent-indigo: #8f9eff;
-      --glow: 0 0 18px rgba(180, 120, 255, 0.35);
-      --card-hover: rgba(190, 130, 255, 0.12);
-      --transition: all 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
-    }
+:root {
+  --bg-deep:#07050f;
+  --bg-surface:#0f0b17;
+  --panel-glass:rgba(22,16,35,.92);
+  --panel-border:rgba(180,130,255,.18);
+  --text-primary:#f2eefb;
+  --text-dim:#b3a6cf;
+  --accent-violet:#b77aff;
+  --accent-pink:#f07ec2;
+  --accent-indigo:#8f9eff;
+  --glow:0 0 18px rgba(180,120,255,.35);
+  --card-hover:rgba(190,130,255,.12);
+  --transition:all .28s cubic-bezier(.2,.9,.3,1);
+  --input-bg:rgba(255,255,255,.04);
+  --card-bg:linear-gradient(145deg,#171022,#0d0817);
+  --radius-lg:24px;
+  --radius-md:18px;
+  --radius-sm:12px;
+}
 
-    body {
-      background: var(--bg-deep);
-      color: var(--text-primary);
-      font-family: 'Inter', ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+[data-theme="light"] {
+  --bg-deep:#f6f3fc;
+  --bg-surface:#fff;
+  --panel-glass:rgba(255,255,255,.85);
+  --panel-border:rgba(120,80,200,.2);
+  --text-primary:#1a1230;
+  --text-dim:#5c4d7a;
+  --accent-violet:#7c3aed;
+  --accent-pink:#db2777;
+  --accent-indigo:#4f46e5;
+  --glow:0 0 18px rgba(140,80,220,.25);
+  --card-hover:rgba(140,80,220,.08);
+  --input-bg:rgba(0,0,0,.03);
+  --card-bg:linear-gradient(145deg,#ffffff,#f4f0ff);
+}
 
-    /* subtle noise / grain */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
+/* Per-subject accent themes */
+[data-subject="physics"]  { --subject-accent:#22d3ee; --subject-glow:rgba(34,211,238,.35); }
+[data-subject="chemistry"]{ --subject-accent:#f59e0b; --subject-glow:rgba(245,158,11,.35); }
+[data-subject="zoology"]  { --subject-accent:#f472b6; --subject-glow:rgba(244,114,182,.35); }
+[data-subject="botany"]   { --subject-accent:#10b981; --subject-glow:rgba(16,185,129,.35); }
+[data-subject="maths"]    { --subject-accent:#a78bfa; --subject-glow:rgba(167,139,250,.35); }
+[data-subject="english"]  { --subject-accent:#fbbf24; --subject-glow:rgba(251,191,36,.35); }
+[data-subject="cs"]       { --subject-accent:#60a5fa; --subject-glow:rgba(96,165,250,.35); }
 
-    /* ------ UTILITY / TYPOGRAPHY ------ */
-    h1 {
-      font-size: clamp(2.4rem, 9vw, 4.8rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      background: linear-gradient(125deg, #d9c9ff 0%, #b77aff 40%, #f07ec2 90%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 0.5rem;
-    }
+html { scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
+  *, *::before, *::after { animation-duration:.001ms !important; transition-duration:.001ms !important; }
+}
 
-    h2 {
-      font-size: 1.9rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: #e6dcff;
-    }
+body {
+  background:var(--bg-deep);
+  color:var(--text-primary);
+  font-family:'Inter',ui-monospace,'SF Mono',Consolas,monospace;
+  line-height:1.5;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  transition:background .4s ease, color .4s ease;
+  overflow-x:hidden;
+}
 
-    h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: #efeaff;
-    }
+/* Aurora background */
+.aurora-bg {
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.55;
+}
+.aurora-bg::before,.aurora-bg::after{
+  content:"";position:absolute;width:60vmax;height:60vmax;border-radius:50%;
+  filter:blur(80px);opacity:.35;animation:floatBlob 22s ease-in-out infinite;
+}
+.aurora-bg::before{background:radial-gradient(circle,#7c3aed,transparent 65%);top:-15%;left:-10%}
+.aurora-bg::after{background:radial-gradient(circle,#db2777,transparent 65%);bottom:-20%;right:-15%;animation-delay:-11s}
+@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(4vw,-4vh) scale(1.15)}}
 
-    p {
-      color: var(--text-dim);
-      max-width: 65ch;
-    }
+/* Cursor glow */
+.cursor-glow {
+  position:fixed;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(183,122,255,.18),transparent 65%);
+  transform:translate(-50%,-50%);transition:opacity .3s;opacity:0;
+  mix-blend-mode:screen;
+}
+[data-theme="light"] .cursor-glow{background:radial-gradient(circle,rgba(124,58,237,.12),transparent 65%);mix-blend-mode:multiply}
 
-    .eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--accent-violet);
-      font-weight: 600;
-      margin-bottom: 0.8rem;
-      opacity: 0.9;
-    }
+/* Grain overlay */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-    .subtitle {
-      font-size: 1.05rem;
-      color: var(--text-dim);
-      max-width: 55ch;
-      margin: 0 auto 1.5rem;
-    }
+h1{font-size:clamp(2.4rem,9vw,4.8rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;
+  background:linear-gradient(125deg,#d9c9ff 0%,#b77aff 40%,#f07ec2 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:.5rem;}
+h2{font-size:1.9rem;font-weight:600;letter-spacing:-.02em;color:var(--text-primary)}
+h3{font-size:1.2rem;font-weight:600;color:var(--text-primary)}
+p{color:var(--text-dim);max-width:65ch}
 
-    /* ------ SCROLLBAR ------ */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0b0813;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #3a2a55;
-      border-radius: 12px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #5a3f85;
-    }
+.eyebrow{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent-violet);font-weight:600;margin-bottom:.8rem;opacity:.9}
+.subtitle{font-size:1.05rem;color:var(--text-dim);max-width:55ch;margin:0 auto 1.5rem}
 
-    /* ------ HEADER / NAV ------ */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 1rem 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(7, 5, 15, 0.8);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      border-bottom: 1px solid rgba(180, 130, 255, 0.12);
-      z-index: 100;
-      transition: var(--transition);
-    }
+/* Typewriter */
+.typewriter::after{content:"|";animation:blink 1s step-end infinite;font-weight:200;opacity:.7}
+@keyframes blink{50%{opacity:0}}
 
-    .logo {
-      font-size: 1.7rem;
-      font-weight: 800;
-      letter-spacing: 6px;
-      background: linear-gradient(100deg, #d9c9ff, #f07ec2);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 25px rgba(190, 120, 255, 0.35);
-      transition: var(--transition);
-    }
-    .logo:hover {
-      text-shadow: 0 0 35px rgba(240, 126, 194, 0.6);
-    }
+/* Scrollbar */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg-surface)}
+::-webkit-scrollbar-thumb{background:rgba(140,90,200,.4);border-radius:12px}
+::-webkit-scrollbar-thumb:hover{background:rgba(180,120,255,.7)}
 
-    .header-tag {
-      font-size: 0.65rem;
-      letter-spacing: 3px;
-      color: #b3a6cf;
-      border: 1px solid rgba(180, 130, 255, 0.25);
-      padding: 0.3rem 0.9rem;
-      border-radius: 40px;
-      background: rgba(140, 80, 220, 0.08);
-      font-weight: 500;
-    }
+/* Header */
+header{
+  position:fixed;top:0;left:0;width:100%;padding:1rem 5%;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  background:rgba(7,5,15,.8);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);
+  border-bottom:1px solid var(--panel-border);z-index:100;transition:var(--transition);
+}
+[data-theme="light"] header{background:rgba(250,248,255,.85)}
 
-    /* ------ MAIN / PAGE TRANSITIONS ------ */
-    main {
-      padding-top: 70px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 1;
-    }
+.logo{font-size:1.7rem;font-weight:800;letter-spacing:6px;
+  background:linear-gradient(100deg,#d9c9ff,#f07ec2);-webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 25px rgba(190,120,255,.35);transition:var(--transition)}
+.logo:hover{text-shadow:0 0 35px rgba(240,126,194,.6)}
 
-    .page {
-      display: none;
-      min-height: calc(100vh - 70px);
-      padding: 3.5rem 6vw 3rem;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      animation: pageEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-      width: 100%;
-    }
+.header-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.header-tag{font-size:.65rem;letter-spacing:3px;color:var(--text-dim);
+  border:1px solid var(--panel-border);padding:.3rem .9rem;border-radius:40px;
+  background:rgba(140,80,220,.08);font-weight:500;white-space:nowrap}
 
-    .page.active {
-      display: flex;
-    }
+.icon-btn{
+  background:var(--input-bg);border:1px solid var(--panel-border);border-radius:12px;
+  padding:.5rem .7rem;font-size:1rem;display:flex;align-items:center;gap:.4rem;
+  color:var(--text-primary);transition:var(--transition);white-space:nowrap;
+}
+.icon-btn:hover{background:var(--card-hover);border-color:var(--accent-violet);transform:translateY(-1px)}
+.icon-btn .kbd{font-size:.65rem;opacity:.65;border:1px solid var(--panel-border);padding:1px 5px;border-radius:4px;margin-left:.2rem}
 
-    @keyframes pageEnter {
-      0% {
-        opacity: 0;
-        transform: translateY(22px) scale(0.995);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
+/* Main & Pages */
+main{padding-top:74px;flex:1;display:flex;flex-direction:column;position:relative;z-index:3}
 
-    .content {
-      width: 100%;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+.page{display:none;min-height:calc(100vh - 74px);padding:3.5rem 6vw 3rem;
+  align-items:center;justify-content:center;flex-direction:column;text-align:center;width:100%}
+.page.active{display:flex;animation:pageEnter .5s cubic-bezier(.16,1,.3,1)}
+@keyframes pageEnter{from{opacity:0;transform:translateY(22px) scale(.995)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-    /* ------ BUTTONS / INTERACTIVE ------ */
-    button {
-      font: inherit;
-      cursor: pointer;
-      color: inherit;
-      border: none;
-      background: none;
-      transition: var(--transition);
-      -webkit-tap-highlight-color: transparent;
-    }
+.content{width:100%;max-width:1100px;margin:0 auto}
 
-    .primary {
-      padding: 0.95rem 2.6rem;
-      border-radius: 50px;
-      background: linear-gradient(105deg, #9c5cff, #e06bb8);
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.3px;
-      color: #0d0719;
-      box-shadow: 0 10px 30px -6px rgba(160, 90, 240, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
+/* Buttons */
+button{font:inherit;cursor:pointer;color:inherit;border:none;background:none;transition:var(--transition);-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:2px solid var(--accent-violet);outline-offset:3px}
 
-    .primary:hover {
-      filter: brightness(1.1);
-      transform: translateY(-3px);
-      box-shadow: 0 18px 35px -8px #b77aff;
-    }
+.primary{padding:.95rem 2.6rem;border-radius:50px;
+  background:linear-gradient(105deg,#9c5cff,#e06bb8);font-weight:600;font-size:1rem;letter-spacing:.3px;
+  color:#0d0719;box-shadow:0 10px 30px -6px rgba(160,90,240,.5),inset 0 1px 0 rgba(255,255,255,.3);
+  border:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden}
+.primary:hover{filter:brightness(1.1);transform:translateY(-3px);box-shadow:0 18px 35px -8px #b77aff}
+.primary:active{transform:translateY(-1px) scale(.98)}
+.primary::after{ /* ripple */
+  content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(255,255,255,.5),transparent 40%);
+  opacity:0;transition:opacity .5s}
 
-    .secondary {
-      padding: 0.8rem 2rem;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(180, 130, 255, 0.25);
-      font-weight: 500;
-      color: #d9ccff;
-      backdrop-filter: blur(10px);
-    }
+.secondary{padding:.8rem 2rem;border-radius:50px;background:var(--input-bg);
+  border:1px solid var(--panel-border);font-weight:500;color:var(--accent-violet);backdrop-filter:blur(10px)}
+.secondary:hover{background:var(--card-hover);border-color:var(--accent-violet);transform:translateY(-2px);box-shadow:var(--glow)}
+.secondary:active{transform:scale(.97)}
 
-    .secondary:hover {
-      background: rgba(180, 130, 255, 0.12);
-      border-color: #b77aff;
-      transform: translateY(-2px);
-      box-shadow: var(--glow);
-    }
+/* Grid & Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:1.2rem;margin:2rem 0 1.5rem;text-align:left;width:100%}
 
-    /* ------ GRID & CARDS (subject & chapters) ------ */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 1.2rem;
-      margin: 2rem 0 1.5rem;
-      text-align: left;
-      width: 100%;
-    }
+.subject-card{background:var(--card-bg);border:1px solid var(--panel-border);
+  border-radius:var(--radius-lg);padding:1.8rem 1.3rem;display:flex;flex-direction:column;justify-content:space-between;
+  min-height:180px;text-align:left;transition:var(--transition);box-shadow:0 6px 20px -10px rgba(0,0,0,.6);
+  cursor:pointer;width:100%;position:relative;overflow:hidden;transform-style:preserve-3d}
+.subject-card::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--subject-glow,transparent),transparent 55%);
+  opacity:0;transition:opacity .3s;pointer-events:none}
+.subject-card:hover::before{opacity:.6}
+.subject-card:hover{border-color:var(--subject-accent,var(--accent-violet));transform:translateY(-6px) scale(1.01);
+  box-shadow:0 25px 30px -18px var(--subject-glow,#a064ff)}
 
-    .subject-card {
-      background: linear-gradient(145deg, #171022, #0d0817);
-      border: 1px solid rgba(150, 100, 230, 0.2);
-      border-radius: 24px;
-      padding: 1.8rem 1.3rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 180px;
-      text-align: left;
-      transition: var(--transition);
-      box-shadow: 0 6px 20px -10px black;
-      cursor: pointer;
-      width: 100%;
-    }
+.subject-icon{font-size:2.2rem;line-height:1;margin-bottom:1rem;filter:drop-shadow(0 0 12px var(--subject-glow,#b77aff80))}
+.subject-card h3{font-size:1.4rem;margin:.2rem 0 .1rem;letter-spacing:-.5px}
+.subject-card p{font-size:.8rem;color:var(--text-dim);opacity:.8;margin:0}
+.subject-arrow{align-self:flex-end;color:var(--subject-accent,var(--accent-violet));font-size:1.7rem;line-height:1;margin-top:.5rem;transition:var(--transition)}
+.subject-card:hover .subject-arrow{transform:translate(4px,-4px);color:var(--accent-pink)}
 
-    .subject-card:hover {
-      border-color: #b77aff;
-      transform: translateY(-6px) scale(1.01);
-      background: #1b122b;
-      box-shadow: 0 25px 30px -18px #a064ff;
-    }
+/* Progress ring on subject card */
+.progress-ring{position:absolute;top:1rem;right:1rem;width:44px;height:44px}
+.progress-ring circle{fill:none;stroke-width:3;transform:rotate(-90deg);transform-origin:center}
+.progress-ring .bg{stroke:rgba(255,255,255,.08)}
+.progress-ring .fg{stroke:var(--subject-accent,var(--accent-violet));stroke-linecap:round;
+  stroke-dasharray:126;stroke-dashoffset:calc(126 - (126 * var(--progress,0) / 100));transition:stroke-dashoffset .6s}
+.progress-ring text{fill:var(--text-primary);font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:middle}
 
-    .subject-icon {
-      font-size: 2.2rem;
-      line-height: 1;
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 0 12px #b77aff80);
-    }
+/* Chapter list */
+.chapter-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:.8rem;margin:2rem 0 1.2rem;text-align:left;width:100%}
 
-    .subject-card h3 {
-      font-size: 1.4rem;
-      margin: 0.2rem 0 0.1rem;
-      color: #f0eaff;
-      letter-spacing: -0.5px;
-    }
+.chapter{display:flex;align-items:center;gap:14px;padding:1.1rem 1.3rem;
+  background:var(--panel-glass);border:1px solid var(--panel-border);border-radius:var(--radius-md);
+  text-align:left;width:100%;transition:var(--transition);backdrop-filter:blur(6px);position:relative;overflow:hidden}
+.chapter::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(180,120,255,.25),transparent 40%);opacity:0;transition:opacity .5s;pointer-events:none}
+.chapter:active::after{opacity:1;transition:opacity 0s}
+.chapter:hover{border-color:var(--accent-violet);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 18px 25px -18px #a064ff}
 
-    .subject-card p {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      opacity: 0.8;
-      margin: 0;
-    }
+.number{color:var(--accent-violet);font-size:.8rem;font-weight:600;letter-spacing:1px;min-width:32px;opacity:.9}
+.chapter-name{font-size:.94rem;font-weight:500;line-height:1.4;flex:1}
+.chapter .arrow{margin-left:auto;color:var(--accent-violet);font-size:1.3rem;transition:var(--transition);opacity:.7}
+.chapter:hover .arrow{opacity:1;transform:translateX(4px)}
+.chapter.visited .number::before{content:"✓ ";color:#10b981;font-weight:700}
+.chapter.bookmarked{border-color:#fbbf24}
+.chapter-actions{display:flex;gap:.3rem;margin-left:.5rem}
 
-    .subject-arrow {
-      align-self: flex-end;
-      color: var(--accent-violet);
-      font-size: 1.7rem;
-      line-height: 1;
-      margin-top: 0.5rem;
-      transition: var(--transition);
-    }
-    .subject-card:hover .subject-arrow {
-      transform: translate(4px, -4px);
-      color: var(--accent-pink);
-    }
+.bookmark-btn{background:none;border:none;font-size:1rem;opacity:.35;transition:var(--transition);padding:.2rem;cursor:pointer}
+.bookmark-btn:hover{opacity:1;transform:scale(1.2)}
+.bookmark-btn.active{opacity:1;color:#fbbf24;filter:drop-shadow(0 0 6px #fbbf24)}
 
-    /* ------ CHAPTER LIST & CATEGORIES ------ */
-    .chapter-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 0.8rem;
-      margin: 2rem 0 1.2rem;
-      text-align: left;
-      width: 100%;
-    }
+/* Categories */
+.category{display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem 1.8rem;background:var(--panel-glass);border:1px solid var(--panel-border);
+  border-radius:20px;width:100%;margin-bottom:.9rem;text-align:left;font-weight:500;font-size:1.05rem;
+  transition:var(--transition);backdrop-filter:blur(8px);cursor:pointer}
+.category:hover{border-color:var(--accent-violet);background:var(--card-hover);transform:scale(1.01) translateY(-2px);box-shadow:0 20px 25px -18px #b77aff}
+.category span:last-child{color:var(--accent-violet);font-size:.9rem;opacity:.85}
 
-    .chapter {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 1.1rem 1.3rem;
-      background: var(--panel-glass);
-      border: 1px solid var(--panel-border);
-      border-radius: 18px;
-      text-align: left;
-      width: 100%;
-      transition: var(--transition);
-      backdrop-filter: blur(6px);
-    }
+/* Actions & footer */
+.actions{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-top:2.2rem}
+footer{margin-top:3.5rem;font-size:.7rem;letter-spacing:2px;color:var(--text-dim);opacity:.6;text-transform:uppercase}
 
-    .chapter:hover {
-      border-color: #b77aff;
-      background: #1d152e;
-      transform: translateY(-3px);
-      box-shadow: 0 18px 25px -18px #a064ff;
-    }
+/* Loading screen */
+#loading{position:fixed;inset:0;background:var(--bg-deep);z-index:1000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s,visibility .6s}
+#loading.hide{opacity:0;visibility:hidden}
+.loader-logo{font-size:3.2rem;font-weight:800;letter-spacing:12px;
+  background:linear-gradient(120deg,#d9c9ff,#f07ec2);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:pulseGlow 1.8s infinite alternate}
+@keyframes pulseGlow{0%{text-shadow:0 0 20px rgba(180,120,255,.3)}100%{text-shadow:0 0 50px rgba(240,126,194,.9)}}
+.loader-track{width:180px;height:2px;background:rgba(140,90,200,.2);margin-top:1.8rem;border-radius:20px;overflow:hidden}
+.loader-bar{width:0%;height:100%;background:linear-gradient(90deg,#b77aff,#f07ec2);
+  animation:loadProgress 1.4s cubic-bezier(.65,0,.35,1) forwards;box-shadow:0 0 18px #c07aff}
+@keyframes loadProgress{to{width:100%}}
 
-    .number {
-      color: var(--accent-violet);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      min-width: 32px;
-      opacity: 0.9;
-    }
+/* Chapter workspace */
+#chapter .card{background:var(--panel-glass);border:1px solid var(--panel-border);
+  border-radius:var(--radius-lg);padding:1.8rem 1.2rem;text-align:left;transition:var(--transition);backdrop-filter:blur(8px);cursor:pointer}
+#chapter .card:hover{border-color:var(--accent-violet);transform:translateY(-4px);box-shadow:0 25px 30px -20px #a064ff}
+#chapter .card h3{font-size:1.25rem;display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
+#chapter .card p{font-size:.85rem;opacity:.8}
 
-    .chapter-name {
-      font-size: 0.94rem;
-      font-weight: 500;
-      line-height: 1.4;
-      color: #e3dbff;
-    }
+/* Breadcrumb */
+.breadcrumb{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);
+  margin-bottom:1.2rem;flex-wrap:wrap;justify-content:center}
+.breadcrumb a{color:var(--accent-violet);cursor:pointer;text-decoration:none;transition:var(--transition)}
+.breadcrumb a:hover{color:var(--accent-pink);text-decoration:underline}
+.breadcrumb span{opacity:.5}
 
-    .chapter .arrow {
-      margin-left: auto;
-      color: #b77aff;
-      font-size: 1.3rem;
-      transition: var(--transition);
-      opacity: 0.7;
-    }
+/* Search bar */
+.search-wrap{position:relative;max-width:520px;margin:1.5rem auto;width:100%}
+.search-input{width:100%;padding:1rem 1.2rem 1rem 3rem;border-radius:50px;
+  border:1px solid var(--panel-border);background:var(--input-bg);color:var(--text-primary);
+  font-size:1rem;font-family:inherit;transition:var(--transition)}
+.search-input:focus{outline:none;border-color:var(--accent-violet);box-shadow:0 0 0 4px rgba(183,122,255,.15);background:var(--panel-glass)}
+.search-input::placeholder{color:var(--text-dim);opacity:.6}
+.search-icon{position:absolute;left:1.1rem;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none}
+.search-results{position:absolute;top:calc(100% + .5rem);left:0;right:0;background:var(--panel-glass);
+  border:1px solid var(--panel-border);border-radius:var(--radius-md);max-height:340px;overflow-y:auto;
+  backdrop-filter:blur(20px);z-index:50;display:none;text-align:left;box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.search-results.open{display:block;animation:pageEnter .25s}
+.search-result{padding:.8rem 1.1rem;cursor:pointer;border-bottom:1px solid var(--panel-border);transition:var(--transition);
+  display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.search-result:last-child{border-bottom:none}
+.search-result:hover{background:var(--card-hover)}
+.search-result .sr-name{font-size:.9rem}
+.search-result .sr-cat{font-size:.7rem;color:var(--accent-violet);opacity:.8;white-space:nowrap}
+.search-empty{padding:1.5rem;text-align:center;color:var(--text-dim);font-size:.9rem}
 
-    .chapter:hover .arrow {
-      opacity: 1;
-      transform: translateX(4px);
-    }
+/* Command palette */
+.cmdk-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);
+  z-index:500;display:none;align-items:flex-start;justify-content:center;padding-top:15vh}
+.cmdk-overlay.open{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.cmdk{width:min(560px,92vw);background:var(--bg-surface);border:1px solid var(--panel-border);
+  border-radius:var(--radius-lg);box-shadow:0 30px 80px rgba(0,0,0,.7);overflow:hidden;
+  animation:cmdkIn .3s cubic-bezier(.16,1,.3,1)}
+@keyframes cmdkIn{from{transform:translateY(-20px) scale(.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.cmdk input{width:100%;padding:1.1rem 1.3rem;border:none;background:transparent;color:var(--text-primary);
+  font-size:1.05rem;font-family:inherit;border-bottom:1px solid var(--panel-border)}
+.cmdk input:focus{outline:none}
+.cmdk-results{max-height:400px;overflow-y:auto;padding:.4rem}
+.cmdk-item{padding:.75rem 1rem;border-radius:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:.5rem;transition:var(--transition);font-size:.9rem}
+.cmdk-item:hover,.cmdk-item.selected{background:var(--card-hover)}
+.cmdk-item .cmdk-cat{font-size:.7rem;color:var(--accent-violet);opacity:.8}
+.cmdk-empty{padding:1.5rem;text-align:center;color:var(--text-dim);font-size:.9rem}
+.cmdk-footer{padding:.6rem 1rem;border-top:1px solid var(--panel-border);font-size:.7rem;color:var(--text-dim);display:flex;gap:1rem;justify-content:flex-end;opacity:.7}
 
-    /* category cards (chemistry) */
-    .category {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.4rem 1.8rem;
-      background: var(--panel-glass);
-      border: 1px solid var(--panel-border);
-      border-radius: 20px;
-      width: 100%;
-      margin-bottom: 0.9rem;
-      text-align: left;
-      font-weight: 500;
-      font-size: 1.05rem;
-      transition: var(--transition);
-      backdrop-filter: blur(8px);
-    }
+/* Chapter tabs + content */
+.tabs{display:flex;gap:.4rem;margin:1.5rem 0 1rem;flex-wrap:wrap;justify-content:center}
+.tab{padding:.6rem 1.2rem;border-radius:50px;background:var(--input-bg);border:1px solid var(--panel-border);
+  font-size:.85rem;font-weight:500;transition:var(--transition)}
+.tab.active{background:linear-gradient(105deg,#9c5cff,#e06bb8);color:#0d0719;border-color:transparent;font-weight:600}
+.tab-panel{display:none;text-align:left;background:var(--panel-glass);border:1px solid var(--panel-border);
+  border-radius:var(--radius-lg);padding:2rem;backdrop-filter:blur(8px);margin-top:1rem}
+.tab-panel.active{display:block;animation:pageEnter .3s}
+.tab-panel h3{margin-bottom:1rem;color:var(--accent-violet)}
+.tab-panel p{margin-bottom:1rem}
+.tab-panel ul,.tab-panel ol{margin:.5rem 0 1rem 1.5rem;color:var(--text-dim)}
+.tab-panel li{margin-bottom:.4rem}
+.tab-panel code{background:var(--input-bg);padding:.15rem .4rem;border-radius:5px;font-size:.9em;color:var(--accent-violet)}
 
-    .category:hover {
-      border-color: #b77aff;
-      background: #1b122b;
-      transform: scale(1.01) translateY(-2px);
-      box-shadow: 0 20px 25px -18px #b77aff;
-    }
+/* Quiz */
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--panel-border)}
+.quiz-q:last-child{border-bottom:none}
+.quiz-q .q-text{font-weight:600;margin-bottom:.8rem}
+.quiz-opt{display:block;width:100%;text-align:left;padding:.7rem 1rem;border-radius:10px;
+  border:1px solid var(--panel-border);background:var(--input-bg);margin-bottom:.5rem;font-size:.9rem;transition:var(--transition)}
+.quiz-opt:hover{border-color:var(--accent-violet);background:var(--card-hover)}
+.quiz-opt.correct{border-color:#10b981;background:rgba(16,185,129,.15);color:#10b981}
+.quiz-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.15);color:#ef4444}
+.quiz-score{font-size:1.2rem;font-weight:600;text-align:center;margin-top:1rem;color:var(--accent-violet)}
 
-    .category span:last-child {
-      color: var(--accent-violet);
-      font-size: 0.9rem;
-      opacity: 0.85;
-    }
+/* Flashcards */
+.flashcard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:1rem}
+.flashcard{perspective:1000px;height:170px;cursor:pointer}
+.flashcard-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+.flashcard-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center;padding:1.2rem;text-align:center;
+  border-radius:var(--radius-md);border:1px solid var(--panel-border);background:var(--panel-glass);
+  font-size:.95rem;line-height:1.4}
+.flashcard-back{transform:rotateY(180deg);background:linear-gradient(145deg,#2a1a45,#1a1030);color:#e6dcff}
 
-    /* ------ ACTIONS & FOOTER ------ */
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 2.2rem;
-    }
+/* Formula sheet */
+.formula-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:1rem}
+.formula-card{background:var(--panel-glass);border:1px solid var(--panel-border);border-radius:var(--radius-md);
+  padding:1.2rem;text-align:left;transition:var(--transition)}
+.formula-card:hover{border-color:var(--accent-violet);transform:translateY(-2px)}
+.formula-card .f-title{font-size:.75rem;color:var(--accent-violet);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;font-weight:600}
+.formula-card .f-body{font-size:1rem;color:var(--text-primary);font-family:'KaTeX_Math',serif;line-height:1.5}
 
-    footer {
-      margin-top: 3.5rem;
-      font-size: 0.7rem;
-      letter-spacing: 2px;
-      color: #6c5d86;
-      text-transform: uppercase;
-    }
+/* Progress dashboard */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:var(--panel-glass);border:1px solid var(--panel-border);border-radius:var(--radius-md);
+  padding:1.4rem;text-align:center;transition:var(--transition)}
+.stat-card:hover{border-color:var(--accent-violet);transform:translateY(-2px)}
+.stat-value{font-size:2.2rem;font-weight:700;background:linear-gradient(120deg,#d9c9ff,#f07ec2);
+  -webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+.stat-label{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-top:.4rem}
+.subject-progress-list{margin-top:1.5rem;text-align:left}
+.sp-row{margin-bottom:1rem}
+.sp-head{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:.4rem}
+.sp-bar{height:8px;background:var(--input-bg);border-radius:10px;overflow:hidden}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--accent-violet),var(--accent-pink));border-radius:10px;
+  transition:width .6s cubic-bezier(.16,1,.3,1);width:0}
+.recent-list{margin-top:1.5rem;text-align:left}
+.recent-item{padding:.8rem 1rem;border-radius:10px;background:var(--input-bg);margin-bottom:.5rem;
+  display:flex;justify-content:space-between;font-size:.85rem;cursor:pointer;transition:var(--transition)}
+.recent-item:hover{background:var(--card-hover);border-left:2px solid var(--accent-violet)}
 
-    /* ------ LOADING SCREEN (refined) ------ */
-    #loading {
-      position: fixed;
-      inset: 0;
-      background: #07050f;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
-    }
+/* Skeleton loader */
+.skeleton{background:linear-gradient(90deg,rgba(180,120,255,.05) 25%,rgba(180,120,255,.15) 50%,rgba(180,120,255,.05) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-md);height:70px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-    #loading.hide {
-      opacity: 0;
-      visibility: hidden;
-    }
+/* Toast */
+.toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:800;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+.toast{padding:.8rem 1.2rem;background:var(--panel-glass);border:1px solid var(--panel-border);
+  border-radius:12px;backdrop-filter:blur(20px);font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);
+  animation:toastIn .3s cubic-bezier(.16,1,.3,1);pointer-events:auto;max-width:320px}
+.toast.success{border-color:#10b981;color:#10b981}
+.toast.info{border-color:var(--accent-violet)}
+@keyframes toastIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.removing{animation:toastOut .3s forwards}
+@keyframes toastOut{to{transform:translateX(120%);opacity:0}}
 
-    .loader-logo {
-      font-size: 3.2rem;
-      font-weight: 800;
-      letter-spacing: 12px;
-      background: linear-gradient(120deg, #d9c9ff, #f07ec2);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: pulseGlow 1.8s infinite alternate;
-    }
+/* Confetti canvas */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:900;display:none}
 
-    @keyframes pulseGlow {
-      0% {
-        text-shadow: 0 0 20px rgba(180, 120, 255, 0.3);
-      }
-      100% {
-        text-shadow: 0 0 50px rgba(240, 126, 194, 0.9);
-      }
-    }
+/* Badges */
+.badges{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem}
+.badge{padding:.4rem .9rem;border-radius:50px;background:var(--input-bg);border:1px solid var(--panel-border);
+  font-size:.75rem;display:flex;align-items:center;gap:.4rem;opacity:.4;transition:var(--transition)}
+.badge.earned{opacity:1;border-color:#fbbf24;background:rgba(251,191,36,.1);box-shadow:0 0 12px rgba(251,191,36,.3)}
 
-    .loader-track {
-      width: 180px;
-      height: 2px;
-      background: #1e152e;
-      margin-top: 1.8rem;
-      border-radius: 20px;
-      overflow: hidden;
-    }
+/* Theme toggle icon */
+.theme-icon{transition:transform .5s}
+[data-theme="light"] .theme-icon{transform:rotate(180deg)}
 
-    .loader-bar {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #b77aff, #f07ec2);
-      animation: loadProgress 1.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-      box-shadow: 0 0 18px #c07aff;
-    }
-
-    @keyframes loadProgress {
-      0% {
-        width: 0%;
-      }
-      100% {
-        width: 100%;
-      }
-    }
-
-    /* ------ CHAPTER WORKSPACE (extra polish) ------ */
-    #chapter .grid {
-      margin-top: 2.5rem;
-    }
-
-    #chapter .card {
-      background: rgba(20, 14, 32, 0.85);
-      border: 1px solid rgba(160, 110, 250, 0.18);
-      border-radius: 22px;
-      padding: 1.8rem 1.2rem;
-      text-align: left;
-      transition: var(--transition);
-      backdrop-filter: blur(8px);
-    }
-
-    #chapter .card:hover {
-      border-color: #b77aff;
-      background: #171022;
-      transform: translateY(-4px);
-      box-shadow: 0 25px 30px -20px #a064ff;
-    }
-
-    #chapter .card h3 {
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.6rem;
-      color: #dccdff;
-    }
-
-    #chapter .card p {
-      font-size: 0.85rem;
-      color: #a696c2;
-    }
-
-    /* ------ RESPONSIVE FINE-TUNE ------ */
-    @media (max-width: 680px) {
-      header {
-        padding: 0.9rem 5%;
-      }
-      .logo {
-        font-size: 1.3rem;
-        letter-spacing: 4px;
-      }
-      .header-tag {
-        font-size: 0.5rem;
-        padding: 0.2rem 0.7rem;
-      }
-      .page {
-        padding: 2.5rem 5% 2rem;
-      }
-      h1 {
-        font-size: clamp(2rem, 8vw, 3.2rem);
-      }
-      .grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.9rem;
-      }
-      .subject-card {
-        min-height: 150px;
-        padding: 1.2rem 1rem;
-      }
-      .subject-icon {
-        font-size: 1.8rem;
-      }
-      .subject-card h3 {
-        font-size: 1.15rem;
-      }
-      .chapter-list {
-        grid-template-columns: 1fr;
-      }
-      .category {
-        padding: 1rem 1.2rem;
-        font-size: 0.95rem;
-      }
-      .actions {
-        gap: 0.8rem;
-      }
-      .primary {
-        padding: 0.8rem 1.8rem;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .subject-card {
-        min-height: 130px;
-      }
-    }
-
-    /* back button subtle hover */
-    .secondary:active {
-      transform: scale(0.97);
-    }
-
-    /* remove ugly focus outlines but keep accessibility */
-    button:focus-visible {
-      outline: 2px solid #b77aff;
-      outline-offset: 3px;
-    }
-  </style>
+/* Responsive */
+@media (max-width:680px){
+  header{padding:.9rem 5%}
+  .logo{font-size:1.3rem;letter-spacing:4px}
+  .header-tag{font-size:.5rem;padding:.2rem .7rem}
+  .page{padding:2.5rem 5% 2rem}
+  h1{font-size:clamp(2rem,8vw,3.2rem)}
+  .grid{grid-template-columns:1fr 1fr;gap:.9rem}
+  .subject-card{min-height:150px;padding:1.2rem 1rem}
+  .subject-icon{font-size:1.8rem}
+  .subject-card h3{font-size:1.15rem}
+  .chapter-list{grid-template-columns:1fr}
+  .category{padding:1rem 1.2rem;font-size:.95rem}
+  .actions{gap:.8rem}
+  .primary{padding:.8rem 1.8rem}
+  .tab-panel{padding:1.2rem}
+  .icon-btn .kbd{display:none}
+}
+@media (max-width:400px){
+  .grid{grid-template-columns:1fr}
+  .subject-card{min-height:130px}
+  .header-tag{display:none}
+}
+</style>
 </head>
 <body>
 
-<!-- refined loading screen -->
+<!-- ============ LOADING ============ -->
 <div id="loading">
   <div class="loader-logo">NOVA</div>
   <div class="loader-track"><div class="loader-bar"></div></div>
 </div>
 
+<!-- ============ BACKGROUNDS ============ -->
+<div class="aurora-bg" aria-hidden="true"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- ============ HEADER ============ -->
 <header>
   <div class="logo">NOVA</div>
-  <div class="header-tag">DIGITAL SPACE</div>
+  <div class="header-actions">
+    <button class="icon-btn" onclick="openCmdK()" aria-label="Open command palette">
+      <span>⌘</span><span>Search</span><span class="kbd">Ctrl K</span>
+    </button>
+    <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">
+      <span class="theme-icon" id="themeIcon">🌙</span>
+    </button>
+    <div class="header-tag">DIGITAL SPACE</div>
+  </div>
 </header>
 
+<!-- ============ MAIN ============ -->
 <main>
 
-  <!-- ========== HOME ========== -->
+  <!-- HOME -->
   <section class="page active" id="home">
     <p class="eyebrow">WELCOME TO NOVA SPACE</p>
-    <h1>Discover<br>Something New.</h1>
-    <p class="subtitle">Explore what's around you — a calm, focused space for curious minds.</p>
+    <h1><span class="typewriter" id="typewriter">Discover Something New.</span></h1>
+    <p class="subtitle">A calm, focused space for curious minds — Physics, Chemistry, Biology & beyond.</p>
     <div class="actions">
-      <button class="primary" onclick="showPage('dashboard')">Let's begin →</button>
+      <button class="primary" onclick="navigate('#/dashboard')">Let's begin →</button>
+      <button class="secondary" onclick="navigate('#/progress')">📊 My Progress</button>
     </div>
     <footer>NOVA EXPERIENCE · MADE FOR THE WEB</footer>
   </section>
 
-  <!-- ========== DASHBOARD (subjects) ========== -->
+  <!-- DASHBOARD -->
   <section class="page" id="dashboard">
     <div class="content">
       <p class="eyebrow">YOUR LEARNING SPACE</p>
       <h1>Explore Essentials</h1>
-      <p class="subtitle">Choose a subject to explore its chapters.</p>
+      <p class="subtitle">Choose a subject, search a chapter, or press <code>Ctrl K</code>.</p>
 
-      <div class="grid">
-        <button class="subject-card" onclick="openPhysics()">
-          <div class="subject-icon">⚛</div>
-          <h3>Physics</h3>
-          <p>14 chapters</p>
-          <span class="subject-arrow">↗</span>
-        </button>
-
-        <button class="subject-card" onclick="openChemistry()">
-          <div class="subject-icon">⚗</div>
-          <h3>Chemistry</h3>
-          <p>3 categories · 9 chapters</p>
-          <span class="subject-arrow">↗</span>
-        </button>
-
-        <button class="subject-card" onclick="openBiology('Zoology')">
-          <div class="subject-icon">🧬</div>
-          <h3>Zoology</h3>
-          <p>8 chapters</p>
-          <span class="subject-arrow">↗</span>
-        </button>
-
-        <button class="subject-card" onclick="openBiology('Botany')">
-          <div class="subject-icon">🌿</div>
-          <h3>Botany</h3>
-          <p>11 chapters</p>
-          <span class="subject-arrow">↗</span>
-        </button>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="search" class="search-input" id="searchInput" placeholder="Search any chapter…" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
       </div>
 
+      <div class="grid" id="subjectGrid"></div>
+
       <div class="actions">
-        <button class="secondary" onclick="showPage('home')">← Home</button>
+        <button class="secondary" onclick="navigate('#/')">← Home</button>
+        <button class="secondary" onclick="navigate('#/formulas')">📐 Formula Sheet</button>
+        <button class="secondary" onclick="navigate('#/progress')">📊 Progress</button>
+        <button class="secondary" onclick="navigate('#/favorites')">⭐ Favorites</button>
       </div>
     </div>
   </section>
 
-  <!-- ========== PHYSICS ========== -->
-  <section class="page" id="physics">
+  <!-- PHYSICS -->
+  <section class="page" id="physics" data-subject="physics">
     <div class="content">
+      <nav class="breadcrumb" id="bcPhysics"></nav>
       <p class="eyebrow">CLASS 11 · SCIENCE</p>
       <h1>Physics</h1>
       <p class="subtitle">Explore all Physics chapters.</p>
       <div class="chapter-list" id="physicsList"></div>
       <div class="actions">
-        <button class="secondary" onclick="showPage('dashboard')">← Subjects</button>
+        <button class="secondary" onclick="navigate('#/dashboard')">← Subjects</button>
       </div>
     </div>
   </section>
 
-  <!-- ========== CHEMISTRY (categories) ========== -->
-  <section class="page" id="chemistry">
+  <!-- CHEMISTRY -->
+  <section class="page" id="chemistry" data-subject="chemistry">
     <div class="content">
+      <nav class="breadcrumb" id="bcChem"></nav>
       <p class="eyebrow">CLASS 11 · SCIENCE</p>
       <h1>Chemistry</h1>
-      <p class="subtitle">Choose a Chemistry category.</p>
+      <p class="subtitle">Choose a category.</p>
       <div id="chemCategories"></div>
       <div class="actions">
-        <button class="secondary" onclick="showPage('dashboard')">← Subjects</button>
+        <button class="secondary" onclick="navigate('#/dashboard')">← Subjects</button>
       </div>
     </div>
   </section>
 
-  <!-- ========== CHEMISTRY CHAPTERS ========== -->
-  <section class="page" id="chemChapters">
+  <!-- CHEM CHAPTERS -->
+  <section class="page" id="chemChapters" data-subject="chemistry">
     <div class="content">
+      <nav class="breadcrumb" id="bcChemChapters"></nav>
       <p class="eyebrow">CLASS 11 · CHEMISTRY</p>
       <h1 id="chemTitle">Physical Chemistry</h1>
       <div class="chapter-list" id="chemList"></div>
       <div class="actions">
-        <button class="secondary" onclick="showPage('chemistry')">← Categories</button>
+        <button class="secondary" onclick="navigate('#/chemistry')">← Categories</button>
       </div>
     </div>
   </section>
 
-  <!-- ========== BIOLOGY (Zoology / Botany) ========== -->
-  <section class="page" id="biology">
+  <!-- BIOLOGY -->
+  <section class="page" id="biology" data-subject="zoology">
     <div class="content">
+      <nav class="breadcrumb" id="bcBio"></nav>
       <p class="eyebrow">CLASS 11 · BIOLOGY</p>
       <h1 id="bioTitle">Botany</h1>
       <p class="subtitle">Explore your chapters.</p>
       <div class="chapter-list" id="bioList"></div>
       <div class="actions">
-        <button class="secondary" onclick="showPage('dashboard')">← Subjects</button>
+        <button class="secondary" onclick="navigate('#/dashboard')">← Subjects</button>
       </div>
     </div>
   </section>
 
-  <!-- ========== CHAPTER WORKSPACE ========== -->
+  <!-- CHAPTER WORKSPACE -->
   <section class="page" id="chapter">
     <div class="content">
+      <nav class="breadcrumb" id="bcChapter"></nav>
       <p class="eyebrow">NOVA LEARNING SPACE</p>
       <h1 id="chapterTitle">Chapter</h1>
       <p class="subtitle" id="chapterSubject">Class 11</p>
 
-      <div class="grid">
-        <div class="card">
-          <h3>📖 Theory</h3>
-          <p>Chapter notes and explanations.</p>
-        </div>
-        <div class="card">
-          <h3>📝 DPP</h3>
-          <p>Daily practice problems.</p>
-        </div>
-        <div class="card">
-          <h3>🎯 PYQs</h3>
-          <p>Previous year questions.</p>
-        </div>
-        <div class="card">
-          <h3>📊 Progress</h3>
-          <p>Track your chapter completion.</p>
-        </div>
+      <div class="tabs" id="chapterTabs">
+        <button class="tab active" data-tab="theory">📖 Theory</button>
+        <button class="tab" data-tab="dpp">📝 DPP</button>
+        <button class="tab" data-tab="pyq">🎯 PYQs</button>
+        <button class="tab" data-tab="quiz">🧠 Quiz</button>
+        <button class="tab" data-tab="flashcards">🃏 Flashcards</button>
       </div>
 
+      <div class="tab-panel active" id="panel-theory"></div>
+      <div class="tab-panel" id="panel-dpp"></div>
+      <div class="tab-panel" id="panel-pyq"></div>
+      <div class="tab-panel" id="panel-quiz"></div>
+      <div class="tab-panel" id="panel-flashcards"></div>
+
       <div class="actions">
-        <button class="secondary" onclick="goBack()">← Back to Chapters</button>
+        <button class="secondary" onclick="goBack()">← Back</button>
+        <button class="primary" onclick="markChapterComplete()">✓ Mark Complete</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRESS DASHBOARD -->
+  <section class="page" id="progress">
+    <div class="content">
+      <p class="eyebrow">YOUR JOURNEY</p>
+      <h1>Progress Dashboard</h1>
+      <p class="subtitle">Track your learning across all subjects.</p>
+
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="badges" id="badgesRow"></div>
+
+      <h3 style="text-align:left;margin-top:2rem">Subject Progress</h3>
+      <div class="subject-progress-list" id="subjectProgress"></div>
+
+      <h3 style="text-align:left;margin-top:2rem">Recently Opened</h3>
+      <div class="recent-list" id="recentList"></div>
+
+      <div class="actions">
+        <button class="secondary" onclick="navigate('#/dashboard')">← Dashboard</button>
+        <button class="secondary" onclick="exportProgress()">📄 Export as PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAVORITES -->
+  <section class="page" id="favorites">
+    <div class="content">
+      <p class="eyebrow">YOUR COLLECTION</p>
+      <h1>⭐ Favorites</h1>
+      <p class="subtitle">Chapters you've bookmarked.</p>
+      <div class="chapter-list" id="favList"></div>
+      <div class="actions">
+        <button class="secondary" onclick="navigate('#/dashboard')">← Dashboard</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULA SHEET -->
+  <section class="page" id="formulas">
+    <div class="content">
+      <p class="eyebrow">QUICK REFERENCE</p>
+      <h1>Formula Sheet</h1>
+      <p class="subtitle">Searchable, printable key formulas.</p>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="search" class="search-input" id="formulaSearch" placeholder="Search formulas…" autocomplete="off">
+      </div>
+      <div class="formula-grid" id="formulaGrid"></div>
+      <div class="actions">
+        <button class="secondary" onclick="navigate('#/dashboard')">← Dashboard</button>
+        <button class="secondary" onclick="window.print()">🖨 Print</button>
       </div>
     </div>
   </section>
 
 </main>
 
-<script>
-  // ========== DATA ==========
-  const physics = [
-    "Units and Measurements",
-    "Motion in a Straight Line",
-    "Motion in a Plane",
-    "Laws of Motion",
-    "Work, Energy and Power",
-    "System of Particles and Rotational Motion",
-    "Gravitation",
-    "Mechanical Properties of Solids",
-    "Mechanical Properties of Fluids",
-    "Thermal Properties of Matter",
-    "Thermodynamics",
-    "Kinetic Theory",
-    "Oscillations",
-    "Waves"
-  ];
+<!-- Command palette -->
+<div class="cmdk-overlay" id="cmdkOverlay" onclick="if(event.target===this)closeCmdK()">
+  <div class="cmdk" role="dialog" aria-label="Command palette">
+    <input type="text" id="cmdkInput" placeholder="Jump to page, subject, or chapter…" autocomplete="off">
+    <div class="cmdk-results" id="cmdkResults"></div>
+    <div class="cmdk-footer"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>
+  </div>
+</div>
 
-  const chemistry = {
-    "Physical Chemistry": [
-      "Some Basic Concepts of Chemistry",
-      "Structure of Atom",
-      "Thermodynamics",
-      "Equilibrium",
-      "Redox Reactions"
-    ],
-    "Inorganic Chemistry": [
-      "Classification of Elements and Periodicity in Properties",
-      "Chemical Bonding and Molecular Structure"
-    ],
-    "Organic Chemistry": [
-      "Organic Chemistry: Some Basic Principles and Techniques",
-      "Hydrocarbons"
-    ]
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+/* ============================================================
+   NOVA 2.0 — ALL LOGIC
+   ============================================================ */
+
+/* ---------- 1. DATA ---------- */
+const physics = [
+  "Units and Measurements","Motion in a Straight Line","Motion in a Plane",
+  "Laws of Motion","Work, Energy and Power","System of Particles and Rotational Motion",
+  "Gravitation","Mechanical Properties of Solids","Mechanical Properties of Fluids",
+  "Thermal Properties of Matter","Thermodynamics","Kinetic Theory","Oscillations","Waves"
+];
+
+const chemistry = {
+  "Physical Chemistry":["Some Basic Concepts of Chemistry","Structure of Atom","Thermodynamics","Equilibrium","Redox Reactions"],
+  "Inorganic Chemistry":["Classification of Elements and Periodicity in Properties","Chemical Bonding and Molecular Structure"],
+  "Organic Chemistry":["Organic Chemistry: Some Basic Principles and Techniques","Hydrocarbons"]
+};
+
+const zoology = [
+  "Animal Kingdom","Structural Organisation in Animals","Breathing and Exchange of Gases",
+  "Body Fluids and Circulation","Excretory Products and their Elimination","Locomotion and Movement",
+  "Neural Control and Coordination","Chemical Coordination and Integration"
+];
+
+const botany = [
+  "The Living World","Biological Classification","Plant Kingdom","Morphology of Flowering Plants",
+  "Anatomy of Flowering Plants","Cell: The Unit of Life","Biomolecules","Cell Cycle and Cell Division",
+  "Photosynthesis in Higher Plants","Respiration in Plants","Plant Growth and Development"
+];
+
+// Extra subjects (feature #22)
+const maths = ["Sets, Relations and Functions","Trigonometric Functions","Complex Numbers and Quadratic Equations","Linear Inequalities","Permutations and Combinations","Binomial Theorem","Sequences and Series","Straight Lines","Conic Sections","Introduction to 3D Geometry","Limits and Derivatives","Mathematical Reasoning","Statistics","Probability"];
+const english = ["The Portrait of a Lady","We're Not Afraid to Die","Discovering Tut","The Ailing Planet","The Browning Version","Silk Road","Poems Collection","Writing Skills"];
+const cs = ["Computer Fundamentals","Number Systems","Boolean Logic","Python Basics","Control Flow","Functions","Lists and Dictionaries","File Handling","SQL Basics","Cyber Safety"];
+
+const allSubjects = {
+  physics:  { name:"Physics",   icon:"⚛",  list:physics,  tag:"14 chapters" },
+  chemistry:{ name:"Chemistry", icon:"⚗",  list:null,     tag:"3 categories · 9 chapters" },
+  zoology:  { name:"Zoology",   icon:"🧬", list:zoology,  tag:"8 chapters" },
+  botany:   { name:"Botany",    icon:"🌿", list:botany,   tag:"11 chapters" },
+  maths:    { name:"Mathematics",icon:"∑", list:maths,    tag:"14 chapters" },
+  english:  { name:"English",   icon:"📖", list:english,  tag:"8 chapters" },
+  cs:       { name:"Computer Sci",icon:"💻",list:cs,      tag:"10 chapters" }
+};
+
+// Placeholder chapter content (feature #7) — replace with your material
+const chapterContent = {
+  theory: `<h3>Overview</h3><p>This chapter introduces the foundational concepts. Below is a structured summary.</p>
+    <ul><li><strong>Definition:</strong> Key terms used throughout.</li>
+    <li><strong>Principles:</strong> The core ideas that govern the topic.</li>
+    <li><strong>Applications:</strong> Where this concept appears in the real world.</li></ul>
+    <p>Use the tabs above to switch between theory, practice problems, past-year questions, quizzes, and flashcards.</p>`,
+  dpp: `<h3>Daily Practice Problems</h3>
+    <ol><li>Explain the main concept in your own words (2–3 sentences).</li>
+    <li>Solve example 1 from the textbook.</li>
+    <li>Attempt the 5 review questions at the end of the chapter.</li>
+    <li>Write a one-line summary of the hardest part.</li></ol>
+    <p><em>Tip: Revisit the theory tab before attempting these.</em></p>`,
+  pyq: `<h3>Previous Year Questions</h3>
+    <ol><li>Define the key term and give one example. <em>(2 marks)</em></li>
+    <li>Derive the relationship between the given quantities. <em>(3 marks)</em></li>
+    <li>Explain with a labelled diagram. <em>(5 marks)</em></li></ol>
+    <p>Practice at least 3 PYQs daily for best retention.</p>`,
+  quiz: [
+    { q:"What is the primary focus of this chapter?",
+      opts:["Foundational definitions","Advanced derivation","Historical context","Lab procedure"],
+      ans:0 },
+    { q:"Which study technique is most effective here?",
+      opts:["Passive reading","Active recall + practice","Highlighting only","Copying notes"],
+      ans:1 },
+    { q:"How often should you revisit this material?",
+      opts:["Once","Never","Spaced repetition","Only before exam"],
+      ans:2 }
+  ],
+  flashcards: [
+    { front:"Key Term", back:"A concise definition of the central concept." },
+    { front:"Core Principle", back:"The underlying idea that explains the behavior." },
+    { front:"Common Mistake", back:"Mixing up similar-looking terms — slow down and re-read." },
+    { front:"Exam Tip", back:"Practice derivations and labelled diagrams for full marks." }
+  ]
+};
+
+const formulas = [
+  { subject:"Physics", title:"Kinematics", body:"v = u + at &nbsp;·&nbsp; s = ut + ½at² &nbsp;·&nbsp; v² = u² + 2as" },
+  { subject:"Physics", title:"Newton's Second Law", body:"F = ma &nbsp;·&nbsp; p = mv" },
+  { subject:"Physics", title:"Work & Energy", body:"W = F·d·cosθ &nbsp;·&nbsp; KE = ½mv² &nbsp;·&nbsp; PE = mgh" },
+  { subject:"Physics", title:"Ohm's Law", body:"V = IR &nbsp;·&nbsp; P = VI = I²R = V²/R" },
+  { subject:"Chemistry", title:"Ideal Gas Law", body:"PV = nRT" },
+  { subject:"Chemistry", title:"Mole Concept", body:"n = m/M = N/Nₐ = V/22.4 (STP)" },
+  { subject:"Chemistry", title:"pH", body:"pH = −log[H⁺]" },
+  { subject:"Chemistry", title:"Molarity", body:"M = moles of solute / litres of solution" },
+  { subject:"Maths", title:"Quadratic Formula", body:"x = (−b ± √(b²−4ac)) / 2a" },
+  { subject:"Maths", title:"Derivative Power Rule", body:"d/dx (xⁿ) = n·xⁿ⁻¹" },
+  { subject:"Maths", title:"Sum of n terms (AP)", body:"Sₙ = n/2 · [2a + (n−1)d]" },
+  { subject:"Botany", title:"Photosynthesis", body:"6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ (light + chlorophyll)" },
+  { subject:"Zoology", title:"Cardiac Output", body:"CO = HR × Stroke Volume" }
+];
+
+/* ---------- 2. STATE ---------- */
+const state = {
+  previousPage: "dashboard",
+  currentChapter: null,
+  currentSubject: null,
+  quizAnswered: false,
+  visited: JSON.parse(localStorage.getItem('nova_visited') || '{}'),
+  bookmarks: JSON.parse(localStorage.getItem('nova_bookmarks') || '{}'),
+  streak: JSON.parse(localStorage.getItem('nova_streak') || '{"days":0,"last":null}'),
+  theme: localStorage.getItem('nova_theme') || 'dark',
+  muted: localStorage.getItem('nova_muted') === 'true'
+};
+
+/* ---------- 3. HELPERS ---------- */
+const $ = id => document.getElementById(id);
+const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+const chapterKey = (subject, name) => `${subject}__${name}`;
+
+function toast(msg, type='info') {
+  const c = $('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => { t.classList.add('removing'); setTimeout(()=>t.remove(), 300); }, 2800);
+}
+
+function playSound(freq=600, dur=80, vol=0.03) {
+  if (state.muted) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    g.gain.value = vol;
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + dur/1000);
+  } catch(e){}
+}
+
+function haptic(ms=10){ navigator.vibrate?.(ms); }
+
+function track(event, props={}) {
+  // Feature #25 — plug in Plausible/Umami here
+  // window.plausible?.(event, {props});
+  console.debug('[analytics]', event, props);
+}
+
+function confettiBurst() {
+  // Feature #19 — lightweight canvas confetti (no CDN needed)
+  const canvas = $('confetti-canvas');
+  canvas.style.display = 'block';
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  const ctx = canvas.getContext('2d');
+  const pieces = [];
+  const colors = ['#b77aff','#f07ec2','#8f9eff','#22d3ee','#fbbf24'];
+  for (let i=0;i<120;i++){
+    pieces.push({
+      x: innerWidth/2 + (Math.random()-0.5)*200,
+      y: innerHeight/2,
+      vx: (Math.random()-0.5)*12,
+      vy: Math.random()*-14 - 4,
+      size: Math.random()*7+3,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      vr: (Math.random()-0.5)*20,
+      life: 90
+    });
+  }
+  let frame = 0;
+  function loop() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.4; p.rot += p.vr; p.life--;
+      ctx.save();
+      ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, p.life/90);
+      ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 120) requestAnimationFrame(loop);
+    else { ctx.clearRect(0,0,canvas.width,canvas.height); canvas.style.display='none'; }
+  }
+  loop();
+}
+
+/* ---------- 4. THEME (feature #3) ---------- */
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  $('themeIcon').textContent = state.theme === 'dark' ? '🌙' : '☀️';
+}
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('nova_theme', state.theme);
+  applyTheme();
+  playSound(700,60);
+}
+
+/* ---------- 5. HASH ROUTER (feature #20) ---------- */
+function navigate(hash) {
+  if (location.hash === hash) { renderRoute(); }
+  else location.hash = hash;
+}
+function parseHash() {
+  const h = location.hash.replace(/^#\/?/, '') || '';
+  return h.split('/').filter(Boolean);
+}
+function renderRoute() {
+  const parts = parseHash();
+  const route = parts[0] || 'home';
+  const param = parts.slice(1).join('/');
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+  const show = id => {
+    const el = $(id);
+    if (el) el.classList.add('active');
+    window.scrollTo({ top:0, behavior:'smooth' });
   };
 
-  const zoology = [
-    "Animal Kingdom",
-    "Structural Organisation in Animals",
-    "Breathing and Exchange of Gases",
-    "Body Fluids and Circulation",
-    "Excretory Products and their Elimination",
-    "Locomotion and Movement",
-    "Neural Control and Coordination",
-    "Chemical Coordination and Integration"
-  ];
-
-  const botany = [
-    "The Living World",
-    "Biological Classification",
-    "Plant Kingdom",
-    "Morphology of Flowering Plants",
-    "Anatomy of Flowering Plants",
-    "Cell: The Unit of Life",
-    "Biomolecules",
-    "Cell Cycle and Cell Division",
-    "Photosynthesis in Higher Plants",
-    "Respiration in Plants",
-    "Plant Growth and Development"
-  ];
-
-  let previousPage = "dashboard";   // fallback for goBack
-
-  // ========== PAGE NAVIGATION ==========
-  function showPage(id) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    const target = document.getElementById(id);
-    if (target) target.classList.add("active");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  switch(route) {
+    case '':
+    case 'home': show('home'); break;
+    case 'dashboard': show('dashboard'); renderSubjects(); break;
+    case 'progress': show('progress'); renderProgressPage(); break;
+    case 'favorites': show('favorites'); renderFavorites(); break;
+    case 'formulas': show('formulas'); renderFormulas(); break;
+    case 'subject': {
+      const subj = param;
+      if (subj === 'chemistry') { openChemistry(); break; }
+      openSubject(subj);
+      break;
+    }
+    case 'chem': {
+      if (param) { openChemCategory(decodeURIComponent(param)); }
+      else { openChemistry(); }
+      break;
+    }
+    case 'bio': {
+      openBiology(param === 'zoology' ? 'Zoology' : 'Botany');
+      break;
+    }
+    case 'chapter': {
+      // #/chapter/subject/ChapterName
+      const subj = parts[1];
+      const name = decodeURIComponent(parts.slice(2).join('/'));
+      if (subj && name) openChapter(name, subj, true);
+      else navigate('#/dashboard');
+      break;
+    }
+    default: show('home');
   }
+  updateBreadcrumbs(route, parts);
+}
 
-  // ========== CHAPTER RENDERING ==========
-  function makeChapters(list, subject, targetId) {
-    const container = document.getElementById(targetId);
-    if (!container) return;
-    container.innerHTML = "";
+/* ---------- 6. BREADCRUMBS (feature #4) ---------- */
+function updateBreadcrumbs(route, parts) {
+  const crumb = (items) => items.map((it, i) => {
+    if (i === items.length - 1) return `<strong>${it.label}</strong>`;
+    return `<a onclick="navigate('${it.href}')">${it.label}</a><span>›</span>`;
+  }).join(' ');
 
-    list.forEach((name, index) => {
-      const btn = document.createElement("button");
-      btn.className = "chapter";
-
-      const numberSpan = document.createElement("span");
-      numberSpan.className = "number";
-      numberSpan.textContent = String(index + 1).padStart(2, "0");
-
-      const titleSpan = document.createElement("span");
-      titleSpan.className = "chapter-name";
-      titleSpan.textContent = name;
-
-      const arrowSpan = document.createElement("span");
-      arrowSpan.className = "arrow";
-      arrowSpan.textContent = "›";
-      arrowSpan.style.marginLeft = "auto";
-
-      btn.append(numberSpan, titleSpan, arrowSpan);
-      btn.addEventListener("click", () => openChapter(name, subject));
-      container.appendChild(btn);
-    });
-  }
-
-  // ========== OPEN SUBJECTS ==========
-  function openPhysics() {
-    makeChapters(physics, "Physics", "physicsList");
-    showPage("physics");
-  }
-
-  function openChemistry() {
-    const container = document.getElementById("chemCategories");
-    container.innerHTML = "";
-
-    Object.entries(chemistry).forEach(([category, chapters]) => {
-      const btn = document.createElement("button");
-      btn.className = "category";
-
-      const nameSpan = document.createElement("span");
-      nameSpan.textContent = category;
-
-      const countSpan = document.createElement("span");
-      countSpan.textContent = chapters.length + " chapters  ›";
-
-      btn.append(nameSpan, countSpan);
-      btn.onclick = () => openChemCategory(category);
-      container.appendChild(btn);
-    });
-
-    showPage("chemistry");
-  }
-
-  function openChemCategory(category) {
-    document.getElementById("chemTitle").textContent = category;
-    makeChapters(chemistry[category], category, "chemList");
-    showPage("chemChapters");
-  }
-
-  function openBiology(subject) {
-    document.getElementById("bioTitle").textContent = subject;
-    const list = subject === "Zoology" ? zoology : botany;
-    makeChapters(list, subject, "bioList");
-    showPage("biology");
-  }
-
-  // ========== OPEN CHAPTER + BACK ==========
-  function openChapter(name, subject) {
-    const activePage = document.querySelector(".page.active");
-    previousPage = activePage ? activePage.id : "dashboard";
-
-    document.getElementById("chapterTitle").textContent = name;
-    document.getElementById("chapterSubject").textContent = "CLASS 11 · " + subject.toUpperCase();
-    showPage("chapter");
-  }
-
-  function goBack() {
-    showPage(previousPage);
-  }
-
-  // ========== LOADER (smooth hide) ==========
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      const loader = document.getElementById("loading");
-      if (loader) loader.classList.add("hide");
-    }, 1400);
+  // Clear all
+  ['bcPhysics','bcChem','bcChemChapters','bcBio','bcChapter'].forEach(id => {
+    const el = $(id); if (el) el.innerHTML = '';
   });
 
-  // Optional: press Escape to go back (nice UX)
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      const activePage = document.querySelector(".page.active");
-      if (activePage && activePage.id === "chapter") {
-        goBack();
-      } else if (activePage && !["home","dashboard"].includes(activePage.id)) {
-        showPage("dashboard");
-      } else if (activePage && activePage.id === "dashboard") {
-        showPage("home");
-      }
+  if (route === 'subject' && parts[1] === 'physics') {
+    $('bcPhysics').innerHTML = crumb([{label:'Home',href:'#/'},{label:'Dashboard',href:'#/dashboard'},{label:'Physics'}]);
+  }
+  if (route === 'subject' && parts[1] === 'chemistry') {
+    $('bcChem').innerHTML = crumb([{label:'Home',href:'#/'},{label:'Dashboard',href:'#/dashboard'},{label:'Chemistry'}]);
+  }
+  if (route === 'chem' && parts[1]) {
+    $('bcChemChapters').innerHTML = crumb([{label:'Home',href:'#/'},{label:'Dashboard',href:'#/dashboard'},{label:'Chemistry',href:'#/subject/chemistry'},{label:decodeURIComponent(parts[1])}]);
+  }
+  if (route === 'bio' && parts[1]) {
+    $('bcBio').innerHTML = crumb([{label:'Home',href:'#/'},{label:'Dashboard',href:'#/dashboard'},{label:parts[1]==='zoology'?'Zoology':'Botany'}]);
+  }
+  if (route === 'chapter') {
+    const subj = parts[1] || '';
+    const name = decodeURIComponent(parts.slice(2).join('/'));
+    const subjLabel = subj.charAt(0).toUpperCase()+subj.slice(1);
+    $('bcChapter').innerHTML = crumb([
+      {label:'Home',href:'#/'},
+      {label:'Dashboard',href:'#/dashboard'},
+      {label:subjLabel,href:`#/subject/${subj}`},
+      {label:name}
+    ]);
+  }
+}
+
+/* ---------- 7. RENDER SUBJECTS (dashboard) ---------- */
+function renderSubjects() {
+  const grid = $('subjectGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  Object.entries(allSubjects).forEach(([key, s]) => {
+    const btn = document.createElement('button');
+    btn.className = 'subject-card';
+    btn.setAttribute('data-subject', key);
+    const pct = subjectProgress(key);
+    btn.innerHTML = `
+      <div class="progress-ring">
+        <svg viewBox="0 0 44 44">
+          <circle class="bg" cx="22" cy="22" r="20"/>
+          <circle class="fg" cx="22" cy="22" r="20" style="--progress:${pct}"/>
+        </svg>
+        <text x="22" y="22">${pct}%</text>
+      </div>
+      <div class="subject-icon">${s.icon}</div>
+      <div>
+        <h3>${s.name}</h3>
+        <p>${s.tag}</p>
+      </div>
+      <span class="subject-arrow">↗</span>`;
+    btn.addEventListener('click', () => {
+      playSound(520,60); haptic(12);
+      if (key === 'chemistry') navigate('#/subject/chemistry');
+      else if (key === 'zoology') navigate('#/bio/zoology');
+      else if (key === 'botany') navigate('#/bio/botany');
+      else navigate(`#/subject/${key}`);
+    });
+    // Mouse-tracked glow
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      btn.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+      btn.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+    });
+    grid.appendChild(btn);
+  });
+}
+
+function subjectProgress(key) {
+  const s = allSubjects[key];
+  let total = 0, done = 0;
+  if (key === 'chemistry') {
+    Object.values(chemistry).forEach(list => { list.forEach(n => { total++; if (state.visited[chapterKey('chemistry', n)]) done++; }); });
+  } else if (s.list) {
+    total = s.list.length;
+    s.list.forEach(n => { if (state.visited[chapterKey(key, n)]) done++; });
+  }
+  return total ? Math.round(done/total*100) : 0;
+}
+
+/* ---------- 8. OPEN SUBJECTS (with skeleton — feature #15) ---------- */
+function skeleton(targetId, count=6) {
+  const c = $(targetId); if (!c) return;
+  c.innerHTML = '';
+  for (let i=0;i<count;i++){
+    const d = document.createElement('div');
+    d.className = 'skeleton';
+    c.appendChild(d);
+  }
+}
+
+function openSubject(subj) {
+  const s = allSubjects[subj];
+  if (!s || !s.list) { navigate('#/dashboard'); return; }
+  const listId = subj === 'physics' ? 'physicsList' : 'bioList';
+  const pageId = subj === 'physics' ? 'physics' : 'biology';
+
+  if (subj === 'maths' || subj === 'english' || subj === 'cs') {
+    // reuse biology page layout dynamically
+    $('bioTitle').textContent = s.name;
+    $('bioTitle').closest('.page').setAttribute('data-subject', subj);
+    skeleton('bioList', s.list.length);
+    setTimeout(() => {
+      makeChapters(s.list, subj, 'bioList');
+      showPageById('biology');
+      if (location.hash !== `#/subject/${subj}`) history.replaceState(null,'',`#/subject/${subj}`);
+    }, 220);
+    return;
+  }
+
+  skeleton(listId, s.list.length);
+  setTimeout(() => {
+    makeChapters(s.list, subj, listId);
+    showPageById(pageId);
+  }, 220);
+}
+
+function showPageById(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = $(id); if (el) el.classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- 9. CHAPTER LISTS (visited + bookmark) ---------- */
+function makeChapters(list, subject, targetId) {
+  const container = $(targetId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  list.forEach((name, index) => {
+    const key = chapterKey(subject, name);
+    const visited = !!state.visited[key];
+    const bookmarked = !!state.bookmarks[key];
+
+    const btn = document.createElement('div');
+    btn.className = 'chapter' + (visited ? ' visited' : '') + (bookmarked ? ' bookmarked' : '');
+    btn.setAttribute('role','button');
+    btn.tabIndex = 0;
+
+    const number = document.createElement('span');
+    number.className = 'number';
+    number.textContent = String(index+1).padStart(2,'0');
+
+    const title = document.createElement('span');
+    title.className = 'chapter-name';
+    title.textContent = name;
+
+    const actions = document.createElement('div');
+    actions.className = 'chapter-actions';
+
+    const bm = document.createElement('button');
+    bm.className = 'bookmark-btn' + (bookmarked ? ' active' : '');
+    bm.textContent = bookmarked ? '★' : '☆';
+    bm.setAttribute('aria-label', bookmarked ? 'Remove bookmark' : 'Bookmark chapter');
+    bm.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleBookmark(subject, name);
+      bm.classList.toggle('active');
+      bm.textContent = bm.classList.contains('active') ? '★' : '☆';
+      playSound(800,60);
+    });
+
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    arrow.textContent = '›';
+
+    actions.append(bm);
+    btn.append(number, title, actions, arrow);
+
+    btn.addEventListener('click', () => {
+      playSound(620,70); haptic(12);
+      navigate(`#/chapter/${subject}/${encodeURIComponent(name)}`);
+    });
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+    });
+    // Ripple position
+    btn.addEventListener('pointerdown', e => {
+      const r = btn.getBoundingClientRect();
+      btn.style.setProperty('--rx', (e.clientX-r.left)+'px');
+      btn.style.setProperty('--ry', (e.clientY-r.top)+'px');
+    });
+
+    container.appendChild(btn);
+  });
+}
+
+/* ---------- 10. CHEMISTRY ---------- */
+function openChemistry() {
+  const container = $('chemCategories');
+  container.innerHTML = '';
+  Object.entries(chemistry).forEach(([category, chapters]) => {
+    const btn = document.createElement('button');
+    btn.className = 'category';
+    btn.innerHTML = `<span>${category}</span><span>${chapters.length} chapters ›</span>`;
+    btn.onclick = () => navigate(`#/chem/${encodeURIComponent(category)}`);
+    container.appendChild(btn);
+  });
+  showPageById('chemistry');
+}
+
+function openChemCategory(category) {
+  if (!chemistry[category]) { navigate('#/subject/chemistry'); return; }
+  $('chemTitle').textContent = category;
+  makeChapters(chemistry[category], 'chemistry', 'chemList');
+  showPageById('chemChapters');
+}
+
+/* ---------- 11. BIOLOGY ---------- */
+function openBiology(subject) {
+  const list = subject === 'Zoology' ? zoology : botany;
+  $('bioTitle').textContent = subject;
+  $('bioTitle').closest('.page').setAttribute('data-subject', subject.toLowerCase());
+  makeChapters(list, subject.toLowerCase(), 'bioList');
+  showPageById('biology');
+}
+
+/* ---------- 12. CHAPTER WORKSPACE ---------- */
+function openChapter(name, subject, skipHash) {
+  const subjectKey = subject.toLowerCase();
+  state.currentChapter = { name, subject };
+  state.currentSubject = subjectKey;
+
+  if (!skipHash) {
+    navigate(`#/chapter/${subjectKey}/${encodeURIComponent(name)}`);
+    return;
+  }
+
+  // Track visit
+  state.visited[chapterKey(subjectKey, name)] = Date.now();
+  save('nova_visited', state.visited);
+  updateStreak();
+  track('chapter_open', { subject: subjectKey, chapter: name });
+
+  $('chapterTitle').textContent = name;
+  $('chapterSubject').textContent = 'CLASS 11 · ' + subject.toUpperCase();
+  const page = $('chapter');
+  page.setAttribute('data-subject', subjectKey);
+
+  // Render content
+  renderChapterContent(name, subjectKey);
+
+  showPageById('chapter');
+  // Reset to theory tab
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'theory'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-theory'));
+
+  playSound(700, 100);
+}
+
+function renderChapterContent(name, subject) {
+  // Theory / DPP / PYQ (static placeholder — feature #7)
+  $('panel-theory').innerHTML = `<h3>${name}</h3>${chapterContent.theory}`;
+  $('panel-dpp').innerHTML = chapterContent.dpp;
+  $('panel-pyq').innerHTML = chapterContent.pyq;
+
+  // Quiz (feature #9)
+  state.quizAnswered = false;
+  $('panel-quiz').innerHTML = `<h3>Quick Quiz</h3><div id="quizBody"></div><div class="quiz-score" id="quizScore"></div>`;
+  const body = $('quizBody');
+  chapterContent.quiz.forEach((q, qi) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'quiz-q';
+    wrap.innerHTML = `<div class="q-text">${qi+1}. ${q.q}</div>`;
+    q.opts.forEach((opt, oi) => {
+      const b = document.createElement('button');
+      b.className = 'quiz-opt';
+      b.textContent = `${String.fromCharCode(65+oi)}. ${opt}`;
+      b.onclick = () => {
+        if (state.quizAnswered) return;
+        if (oi === q.ans) { b.classList.add('correct'); playSound(880,120); }
+        else { b.classList.add('wrong'); playSound(220,120); }
+        // reveal correct
+        wrap.querySelectorAll('.quiz-opt').forEach((el,i) => { if (i===q.ans) el.classList.add('correct'); });
+        state.quizAnswered = true;
+        const score = document.querySelectorAll('.quiz-opt.correct').length;
+        $('quizScore').textContent = `✅ Correct answers revealed — review them above.`;
+      };
+      wrap.appendChild(b);
+    });
+    body.appendChild(wrap);
+  });
+
+  // Flashcards (feature #10)
+  $('panel-flashcards').innerHTML = `<h3>Flip to reveal</h3><div class="flashcard-grid" id="fcGrid"></div>`;
+  const fg = $('fcGrid');
+  chapterContent.flashcards.forEach(fc => {
+    const card = document.createElement('div');
+    card.className = 'flashcard';
+    card.innerHTML = `<div class="flashcard-inner">
+      <div class="flashcard-face flashcard-front">${fc.front}</div>
+      <div class="flashcard-face flashcard-back">${fc.back}</div>
+    </div>`;
+    card.onclick = () => { card.classList.toggle('flipped'); playSound(500,50); };
+    fg.appendChild(card);
+  });
+}
+
+// Tab switching
+document.addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  const id = tab.dataset.tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
+  playSound(600,50);
+});
+
+function goBack() {
+  const prev = state.previousPage || 'dashboard';
+  history.back();
+  setTimeout(() => {
+    if (!document.querySelector('.page.active')) navigate('#/dashboard');
+  }, 200);
+}
+
+/* ---------- 13. COMPLETE + STREAK + BADGES ---------- */
+function markChapterComplete() {
+  if (!state.currentChapter) return;
+  const { name, subject } = state.currentChapter;
+  const key = chapterKey(subject, name);
+  state.visited[key] = Date.now();
+  save('nova_visited', state.visited);
+  updateStreak();
+  confettiBurst();
+  playSound(1046, 200); playSound(1318, 200);
+  haptic([20,50,20]);
+  toast('🎉 Chapter marked complete!', 'success');
+  track('chapter_complete', { subject, chapter: name });
+  checkBadges();
+  renderSubjects();
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (state.streak.last === today) return;
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  if (state.streak.last === yesterday) state.streak.days++;
+  else state.streak.days = 1;
+  state.streak.last = today;
+  save('nova_streak', state.streak);
+}
+
+function checkBadges() {
+  const totalVisited = Object.keys(state.visited).length;
+  const earned = [];
+  if (totalVisited >= 1) earned.push('first-step');
+  if (totalVisited >= 5) earned.push('explorer');
+  if (totalVisited >= 15) earned.push('scholar');
+  if (state.streak.days >= 3) earned.push('streak-3');
+  if (state.streak.days >= 7) earned.push('streak-7');
+  const all = Object.keys(allSubjects).every(k => subjectProgress(k) >= 50);
+  if (all) earned.push('half-master');
+  save('nova_badges', earned);
+  return earned;
+}
+
+/* ---------- 14. BOOKMARKS ---------- */
+function toggleBookmark(subject, name) {
+  const key = chapterKey(subject, name);
+  if (state.bookmarks[key]) delete state.bookmarks[key];
+  else state.bookmarks[key] = { subject, name, at: Date.now() };
+  save('nova_bookmarks', state.bookmarks);
+  track('bookmark_toggle', { subject, chapter: name });
+}
+
+function renderFavorites() {
+  const list = $('favList');
+  if (!list) return;
+  const items = Object.values(state.bookmarks);
+  if (!items.length) {
+    list.innerHTML = `<p style="text-align:center;padding:2rem;opacity:.6">No favorites yet. Tap ☆ on any chapter.</p>`;
+    return;
+  }
+  list.innerHTML = '';
+  items.forEach(({subject, name}) => {
+    const btn = document.createElement('div');
+    btn.className = 'chapter';
+    btn.innerHTML = `<span class="number">★</span><span class="chapter-name">${name}</span>
+      <span style="font-size:.7rem;color:var(--accent-violet);opacity:.7">${subject}</span>
+      <span class="arrow">›</span>`;
+    btn.onclick = () => navigate(`#/chapter/${subject}/${encodeURIComponent(name)}`);
+    list.appendChild(btn);
+  });
+}
+
+/* ---------- 15. GLOBAL SEARCH (feature #2) ---------- */
+function buildSearchIndex() {
+  const idx = [];
+  Object.entries(allSubjects).forEach(([key, s]) => {
+    if (key === 'chemistry') {
+      Object.values(chemistry).forEach(list => list.forEach(n => idx.push({ name:n, subject:'chemistry', cat:'Chemistry' })));
+    } else if (s.list) {
+      s.list.forEach(n => idx.push({ name:n, subject:key, cat:s.name }));
     }
   });
+  return idx;
+}
+const SEARCH_INDEX = buildSearchIndex();
+
+function setupSearch() {
+  const input = $('searchInput'), results = $('searchResults');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) { results.classList.remove('open'); return; }
+    const matches = SEARCH_INDEX.filter(i => i.name.toLowerCase().includes(q)).slice(0, 10);
+    if (!matches.length) {
+      results.innerHTML = `<div class="search-empty">No matches for “${input.value}”</div>`;
+    } else {
+      results.innerHTML = matches.map(m =>
+        `<div class="search-result" data-subj="${m.subject}" data-name="${m.name.replace(/"/g,'&quot;')}">
+          <span class="sr-name">${m.name}</span>
+          <span class="sr-cat">${m.cat}</span>
+        </div>`).join('');
+      results.querySelectorAll('.search-result').forEach(el => {
+        el.onclick = () => {
+          navigate(`#/chapter/${el.dataset.subj}/${encodeURIComponent(el.dataset.name)}`);
+          input.value = ''; results.classList.remove('open');
+        };
+      });
+    }
+    results.classList.add('open');
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrap')) results.classList.remove('open');
+  });
+}
+
+/* ---------- 16. CMD+K PALETTE (feature #6) ---------- */
+const CMDS = [
+  { label:'Home', cat:'Page', href:'#/' },
+  { label:'Dashboard', cat:'Page', href:'#/dashboard' },
+  { label:'Progress', cat:'Page', href:'#/progress' },
+  { label:'Favorites', cat:'Page', href:'#/favorites' },
+  { label:'Formula Sheet', cat:'Page', href:'#/formulas' },
+  { label:'Toggle theme', cat:'Action', action:'theme' },
+  { label:'Export progress as PDF', cat:'Action', action:'export' },
+  ...SEARCH_INDEX.map(i => ({ label:i.name, cat:i.cat, href:`#/chapter/${i.subject}/${encodeURIComponent(i.name)}` }))
+];
+
+let cmdkIndex = 0;
+function openCmdK() {
+  $('cmdkOverlay').classList.add('open');
+  $('cmdkInput').value = '';
+  $('cmdkInput').focus();
+  renderCmdK('');
+  playSound(700,50);
+}
+function closeCmdK() { $('cmdkOverlay').classList.remove('open'); }
+
+function renderCmdK(q) {
+  const query = q.trim().toLowerCase();
+  const list = query ? CMDS.filter(c => c.label.toLowerCase().includes(query)) : CMDS.slice(0, 12);
+  cmdkIndex = 0;
+  const r = $('cmdkResults');
+  if (!list.length) { r.innerHTML = `<div class="cmdk-empty">No results</div>`; return; }
+  r.innerHTML = list.map((c,i) =>
+    `<div class="cmdk-item${i===0?' selected':''}" data-i="${i}">
+      <span>${c.label}</span><span class="cmdk-cat">${c.cat}</span>
+    </div>`).join('');
+  r.querySelectorAll('.cmdk-item').forEach(el => {
+    el.onclick = () => runCmd(list[+el.dataset.i]);
+  });
+  r._list = list;
+}
+
+function runCmd(c) {
+  closeCmdK();
+  if (c.href) navigate(c.href);
+  else if (c.action === 'theme') toggleTheme();
+  else if (c.action === 'export') exportProgress();
+}
+
+document.addEventListener('keydown', e => {
+  // Ctrl/Cmd K
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault(); openCmdK(); return;
+  }
+  // Ctrl/Cmd F → focus search
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+    const active = document.querySelector('.page.active');
+    if (active && active.id === 'dashboard') { e.preventDefault(); $('searchInput').focus(); }
+    if (active && active.id === 'formulas') { e.preventDefault(); $('formulaSearch').focus(); }
+  }
+  const cmdkOpen = $('cmdkOverlay').classList.contains('open');
+  if (cmdkOpen) {
+    const r = $('cmdkResults');
+    const list = r._list || [];
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      cmdkIndex = Math.min(cmdkIndex+1, list.length-1); highlightCmdK();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      cmdkIndex = Math.max(cmdkIndex-1, 0); highlightCmdK();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (list[cmdkIndex]) runCmd(list[cmdkIndex]);
+    } else if (e.key === 'Escape') {
+      closeCmdK();
+    }
+    return;
+  }
+  // Esc for page nav (feature #5)
+  if (e.key === 'Escape') {
+    const active = document.querySelector('.page.active');
+    if (!active) return;
+    const id = active.id;
+    if (id === 'chapter') goBack();
+    else if (['physics','chemistry','chemChapters','biology','progress','favorites','formulas'].includes(id)) navigate('#/dashboard');
+    else if (id === 'dashboard') navigate('#/');
+  }
+  // Chapter navigation with arrows (feature #5)
+  const activePage = document.querySelector('.page.active');
+  if (activePage && (activePage.id === 'physics' || activePage.id === 'biology' || activePage.id === 'chemChapters')) {
+    const chapters = activePage.querySelectorAll('.chapter');
+    if (!chapters.length) return;
+    const focused = document.activeElement;
+    let idx = Array.from(chapters).indexOf(focused);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      idx = Math.min(idx+1, chapters.length-1);
+      if (idx < 0) idx = 0;
+      chapters[idx].focus();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      idx = Math.max(idx-1, 0);
+      chapters[idx].focus();
+    }
+  }
+});
+
+function highlightCmdK() {
+  const items = document.querySelectorAll('.cmdk-item');
+  items.forEach((el,i) => el.classList.toggle('selected', i === cmdkIndex));
+  const el = items[cmdkIndex];
+  if (el) el.scrollIntoView({ block:'nearest' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = $('cmdkInput');
+  if (inp) inp.addEventListener('input', () => renderCmdK(inp.value));
+});
+
+/* ---------- 17. PROGRESS PAGE ---------- */
+function renderProgressPage() {
+  const totalChapters = SEARCH_INDEX.length;
+  const visited = Object.keys(state.visited).length;
+  const bookmarks = Object.keys(state.bookmarks).length;
+  const badges = checkBadges();
+
+  $('statGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${visited}</div><div class="stat-label">Chapters Opened</div></div>
+    <div class="stat-card"><div class="stat-value">${bookmarks}</div><div class="stat-label">Bookmarked</div></div>
+    <div class="stat-card"><div class="stat-value">${state.streak.days}</div><div class="stat-label">Day Streak 🔥</div></div>
+    <div class="stat-card"><div class="stat-value">${Math.round(visited/totalChapters*100)}%</div><div class="stat-label">Overall</div></div>`;
+
+  const badgeDefs = [
+    { id:'first-step', label:'🌱 First Step', tip:'Open 1 chapter' },
+    { id:'explorer', label:'🧭 Explorer', tip:'Open 5 chapters' },
+    { id:'scholar', label:'🎓 Scholar', tip:'Open 15 chapters' },
+    { id:'streak-3', label:'🔥 3-Day Streak', tip:'Visit 3 days in a row' },
+    { id:'streak-7', label:'⚡ 7-Day Streak', tip:'Visit 7 days in a row' },
+    { id:'half-master', label:'🏆 Half Master', tip:'50%+ in every subject' }
+  ];
+  $('badgesRow').innerHTML = badgeDefs.map(b =>
+    `<div class="badge${badges.includes(b.id)?' earned':''}" title="${b.tip}">${b.label}</div>`).join('');
+
+  const sp = $('subjectProgress');
+  sp.innerHTML = '';
+  Object.entries(allSubjects).forEach(([key,s]) => {
+    const pct = subjectProgress(key);
+    sp.innerHTML += `<div class="sp-row">
+      <div class="sp-head"><span>${s.icon} ${s.name}</span><span>${pct}%</span></div>
+      <div class="sp-bar"><div class="sp-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  });
+
+  const recent = Object.entries(state.visited)
+    .sort((a,b) => b[1]-a[1]).slice(0, 8);
+  const rl = $('recentList');
+  if (!recent.length) rl.innerHTML = `<p style="opacity:.6;padding:1rem 0">Nothing yet — open a chapter to start.</p>`;
+  else {
+    rl.innerHTML = recent.map(([key, ts]) => {
+      const [subj, ...rest] = key.split('__');
+      const name = rest.join('__');
+      return `<div class="recent-item" onclick="navigate('#/chapter/${subj}/${encodeURIComponent('${name.replace(/'/g,"\\'")}')}')">
+        <span>${name}</span><span style="opacity:.6;font-size:.75rem">${subj}</span></div>`;
+    }).join('');
+  }
+}
+
+/* ---------- 18. FORMULA SHEET (feature #11) ---------- */
+function renderFormulas(filter='') {
+  const grid = $('formulaGrid'); if (!grid) return;
+  const q = filter.toLowerCase();
+  const list = formulas.filter(f => !q || (f.title+f.subject+f.body).toLowerCase().includes(q));
+  grid.innerHTML = list.length ? list.map(f =>
+    `<div class="formula-card"><div class="f-title">${f.subject} · ${f.title}</div>
+      <div class="f-body">${f.body}</div></div>`).join('')
+    : `<p style="opacity:.6;padding:1rem">No formulas match.</p>`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const fs = $('formulaSearch');
+  if (fs) fs.addEventListener('input', () => renderFormulas(fs.value));
+});
+
+/* ---------- 19. EXPORT PROGRESS AS PDF (feature #29) ---------- */
+function exportProgress() {
+  // Open a print-friendly window
+  const win = window.open('', '_blank');
+  const rows = Object.entries(allSubjects).map(([key,s]) =>
+    `<tr><td>${s.icon} ${s.name}</td><td style="text-align:right">${subjectProgress(key)}%</td></tr>`).join('');
+  const visitedRows = Object.entries(state.visited).map(([k,v]) => {
+    const [subj, ...r] = k.split('__');
+    return `<tr><td>${subj}</td><td>${r.join('__')}</td><td style="text-align:right">${new Date(v).toLocaleDateString()}</td></tr>`;
+  }).join('');
+  win.document.write(`<!DOCTYPE html><html><head><title>NOVA Progress Report</title>
+    <style>body{font-family:system-ui,sans-serif;padding:40px;color:#1a1230;max-width:800px;margin:auto}
+    h1{color:#7c3aed}table{width:100%;border-collapse:collapse;margin:1rem 0}
+    th,td{padding:8px 12px;border-bottom:1px solid #ddd;text-align:left;font-size:14px}
+    th{background:#f4f0ff;color:#7c3aed}small{color:#666}
+    @media print{button{display:none}}</style></head><body>
+    <h1>NOVA · Progress Report</h1>
+    <small>Generated ${new Date().toLocaleString()}</small>
+    <h2>Overall</h2>
+    <p>🔥 ${state.streak.days}-day streak · ${Object.keys(state.visited).length} chapters opened · ${Object.keys(state.bookmarks).length} bookmarked</p>
+    <h2>By Subject</h2>
+    <table><thead><tr><th>Subject</th><th style="text-align:right">Progress</th></tr></thead><tbody>${rows}</tbody></table>
+    <h2>Recently Opened</h2>
+    <table><thead><tr><th>Subject</th><th>Chapter</th><th style="text-align:right">When</th></tr></thead><tbody>${visitedRows}</tbody></table>
+    <button onclick="window.print()" style="margin-top:2rem;padding:10px 20px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨 Print / Save as PDF</button>
+    </body></html>`);
+  win.document.close();
+  track('export_progress');
+}
+
+/* ---------- 20. TYPEWRITER (feature #33) ---------- */
+function typewriterEffect() {
+  const el = $('typewriter'); if (!el) return;
+  const text = el.textContent;
+  el.textContent = '';
+  let i = 0;
+  const speed = 55;
+  (function type() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  })();
+}
+
+/* ---------- 21. CURSOR GLOW (feature #17) ---------- */
+function setupCursorGlow() {
+  const glow = $('cursorGlow'); if (!glow) return;
+  if (window.matchMedia('(pointer:coarse)').matches) return;
+  window.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+    glow.style.opacity = '1';
+  });
+  window.addEventListener('mouseleave', () => glow.style.opacity = '0');
+}
+
+/* ---------- 22. RIPPLE ON PRIMARY BUTTONS ---------- */
+document.addEventListener('pointerdown', e => {
+  const btn = e.target.closest('.primary');
+  if (!btn) return;
+  const r = btn.getBoundingClientRect();
+  btn.style.setProperty('--rx', (e.clientX-r.left)+'px');
+  btn.style.setProperty('--ry', (e.clientY-r.top)+'px');
+  btn.style.setProperty('--ripple', '1');
+  const after = getComputedStyle(btn, '::after');
+});
+
+/* ---------- 23. PWA SERVICE WORKER (feature #24) ---------- */
+if ('serviceWorker' in navigator) {
+  const swCode = `self.addEventListener('install',e=>self.skipWaiting());
+self.addEventListener('activate',e=>self.clients.claim());
+self.addEventListener('fetch',e=>{e.respondWith(caches.open('nova-v1').then(async c=>{const r=await c.match(e.request);return r||fetch(e.request).then(res=>{c.put(e.request,res.clone());return res}).catch(()=>r)}))});`;
+  try {
+    const blob = new Blob([swCode], { type:'text/javascript' });
+    const url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url).catch(()=>{});
+  } catch(e) {}
+}
+
+/* ---------- 24. INIT ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme();
+  renderSubjects();
+  renderFormulas();
+  setupSearch();
+  setupCursorGlow();
+  typewriterEffect();
+
+  // Restore previous visited state into UI on next chapter render (already done)
+  // Update streak on load
+  updateStreak();
+
+  // Listen for hash changes → router
+  window.addEventListener('hashchange', renderRoute);
+  renderRoute();
+
+  // Add click sound to all primary/secondary
+  document.querySelectorAll('.primary,.secondary,.icon-btn').forEach(b => {
+    b.addEventListener('click', () => playSound(560, 40, 0.02));
+  });
+
+  // Vanilla-tilt for subject cards (optional CDN — feature #34)
+  const tiltScript = document.createElement('script');
+  tiltScript.src = 'https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js';
+  tiltScript.onload = () => {
+    if (window.VanillaTilt) {
+      document.querySelectorAll('.subject-card').forEach(card => {
+        VanillaTilt.init(card, { max:6, speed:400, glare:false, scale:1.01 });
+      });
+    }
+  };
+  document.head.appendChild(tiltScript);
+
+  // Loader hide
+  setTimeout(() => $('loading').classList.add('hide'), 1400);
+
+  // Confetti CDN fallback (only if user wants real confetti — we already have canvas burst)
+  // Kept minimal intentionally.
+
+  toast('Welcome to NOVA 2.0 ✨', 'success');
+});
+
+/* Handle direct deep links on first load */
+if (location.hash) setTimeout(renderRoute, 100);
 </script>
 </body>
 </html>
